@@ -1,0 +1,36 @@
+{
+    "name": "Esportal +",
+    "description": "Adds some useful match lobby features.",
+    "version": "1.0.0",
+    "manifest_version": 2,
+    "permissions": [
+        "tabs",
+        "https://api.esportal.com/"
+    ],
+    "icons": {
+        "16": "/img/icon16.png",
+        "48": "/img/icon48.png",
+        "128": "/img/icon128.png"
+    },
+    "content_scripts": [
+        {
+            "run_at": "document_end",
+            "matches": [
+                "https://esportal.com/*"
+            ],
+            "js": [
+                "/js/content.js"
+            ]
+        }
+    ],
+    "browser_action": {
+        "default_icon": "/img/icon48.png",
+        "default_popup": "popup.html"
+    },
+    "background": {
+        "scripts": [
+            "/js/background.js"
+        ],
+        "persistent": false
+    }
+}
