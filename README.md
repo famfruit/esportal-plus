@@ -6,5 +6,5 @@
 
 # Features
 > Information about this function goes here
-> </br>
+> </br></br>
 > <img src="https://i.imgur.com/uxWbc11.png" width="41%"></br>
