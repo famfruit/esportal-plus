@@ -4,5 +4,5 @@
 
 </br>
 # Features
-Calculates and displays the previous matches and K/D ratio for both your team and 
+> Information about this function goes here
 > <img src="https://i.imgur.com/uxWbc11.png" width="41%"></br>
