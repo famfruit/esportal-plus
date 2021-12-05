@@ -5,6 +5,7 @@ window.addEventListener('load', function () {
       processLobby();
     } else if (url.includes("profile")){
       calculateKd();
+      processStats();
     }
 
 });
@@ -20,6 +21,7 @@ chrome.runtime.onMessage.addListener(
             } else if (request.url.includes("profile")){
                 setTimeout(function() {
                     calculateKd();
+                    processStats();
                 }, 1000)
             }
         }

@@ -21,7 +21,8 @@
             "js": [
                 "/js/main.js",
                 "/js/lobby.js",
-                "/js/kd.js"
+                "/js/kd.js",
+                "/js/profile.js"
             ]
         }
     ],
