@@ -71,7 +71,7 @@ async function processStats() {
         let headshots = 0;
         let drops = 0;
         const currentTime = Date.now();
-    
+
         let numberOfGames = 0;
         const url = `https://api.esportal.com/user_profile/get_latest_matches?_=${currentTime}&id=${userId}&page=1&v=2`;
         try {
@@ -116,4 +116,28 @@ async function processStats() {
             playerStats(stats);
         });
     });
+}
+
+async function profileFaceitLevel(){
+  const username = window.location.href.substring(window.location.href.lastIndexOf('/') + 1);
+  const levelCols = {
+    1: "#ededed",
+    2: "#1ce200",
+    3: "#1ce200",
+    4: "#fec700",
+    5: "#fec700",
+    6: "#fec700",
+    7: "#fec700",
+    8: "#ff6309",
+    9: "#ff6309",
+    10: "#f91e00"
+  }
+  level = await getFaceitLevel(username)
+  wrapper = document.querySelector(".user-profile-rank-rating").querySelectorAll(".section")[0]
+  span = document.createElement("a")
+  span.innerHTML = level[0]
+  span.href = `https://faceit.com/en/players/${level[1]}`
+  span.target = "_BLANK"
+  span.style.cssText = `color: ${levelCols[level[0]]};margin-left:10px;border-radius:50%;padding:3px 8px;border:2px solid ${levelCols[level[0]]}`
+  wrapper.appendChild(span)
 }
