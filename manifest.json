@@ -19,7 +19,9 @@
                 "https://esportal.com/*"
             ],
             "js": [
-                "/js/content.js"
+                "/js/main.js",
+                "/js/lobby.js",
+                "/js/kd.js"
             ]
         }
     ],
