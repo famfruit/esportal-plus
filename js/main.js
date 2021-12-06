@@ -8,7 +8,7 @@ window.addEventListener('load', function () {
         profileFaceitLevel();
         processStats();
         processHistory(true);
-             
+
         const prevButton = document.getElementsByClassName("previous-next-buttons")[0].children[0];
         const nextButton = document.getElementsByClassName("previous-next-buttons")[0].children[1];
     
@@ -40,22 +40,22 @@ chrome.runtime.onMessage.addListener(
                     profileFaceitLevel();
                     processStats();
                     processHistory(true);
+
+                    const prevButton = document.getElementsByClassName("previous-next-buttons")[0].children[0];
+                    const nextButton = document.getElementsByClassName("previous-next-buttons")[0].children[1];
+    
+                    prevButton.addEventListener("click", function() {
+                        if (!prevButton.className.includes("disabled")) {
+                            setTimeout(function() { processHistory(false); }, 1000);
+                        }
+                    });
+    
+                    nextButton.addEventListener("click", function() {
+                        if (!nextButton.className.includes("disabled")) {
+                            setTimeout(function() { processHistory(false); }, 1000);
+                        }
+                    });
                 }, 1000);
-                
-                const prevButton = document.getElementsByClassName("previous-next-buttons")[0].children[0];
-                const nextButton = document.getElementsByClassName("previous-next-buttons")[0].children[1];
-
-                prevButton.addEventListener("click", function() {
-                    if (!prevButton.className.includes("disabled")) {
-                        setTimeout(function() { processHistory(false); }, 1000);
-                    }
-                });
-
-                nextButton.addEventListener("click", function() {
-                    if (!nextButton.className.includes("disabled")) {
-                        setTimeout(function() { processHistory(false); }, 1000);
-                    }
-                });
             }
         }
     }

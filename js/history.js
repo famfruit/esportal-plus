@@ -10,7 +10,11 @@ async function processHistory(firstTime) {
             if (match != null && match.players != null) {
                 for (let p = 0; p < match.players.length; p++) {
                     if (match.players[p].username === username) {
-                        return [match.players[p].kills, match.players[p].deaths];
+                        if (match.players[p].team === 1) {
+                            return [match.players[p].kills, match.players[p].deaths, match.team1_score, match.team2_score];
+                        } else {
+                            return [match.players[p].kills, match.players[p].deaths, match.team2_score, match.team1_score];
+                        }
                     }
                 }
             }
@@ -36,13 +40,18 @@ async function processHistory(firstTime) {
             if (data != null) {
                 const kd = `${(Math.round((data[0] / data[1]) * 100) / 100).toFixed(2)}`;
 
-                let td = document.createElement("td");
-                let span = document.createElement("span");
-                let value = document.createTextNode(`${data[0]} - ${data[1]} (${kd})`);
-                span.appendChild(value);
-                td.appendChild(span);
+                let value = "";
+                if (data[0] >= data[1]) {
+                    value = `<td><span style="color: green;">${data[0]} - ${data[1]}</span> (${kd})</td>`;
+                } else {
+                    value = `<td><span style="color: red;">${data[0]} - ${data[1]}</span> (${kd})</td>`;
+                }
 
+                let td = document.createElement("td");
+
+                matchLinks[i].parentElement.parentElement.children[4].innerHTML += ` <span style="color: white;">(${data[2]} - ${data[3]})</span>`;
                 matchLinks[i].parentElement.parentElement.appendChild(td);
+                matchLinks[i].parentElement.parentElement.children[6].innerHTML = value;
             }
         });
     }
