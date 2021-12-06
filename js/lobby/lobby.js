@@ -91,7 +91,7 @@ async function processLobby() {
     let index = 0;
     users.forEach(user => {
         const element = user.getElementsByTagName("span");
-        const level = getFaceitLevel(element[0].innerText).then(level => {
+        let level = getFaceitLevel(element[0].innerText).then(level => {
           if(level === undefined) {return}
           if(level[0] > 0){
             levelWrap = styleLobbyLevels(level)

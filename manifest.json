@@ -1,7 +1,7 @@
 {
   "name": "Esportal +",
   "description": "Adds some useful match lobby features.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "manifest_version": 2,
   "permissions": [
     "tabs",
@@ -18,12 +18,12 @@
       "https://esportal.com/*"
     ],
     "js": [
-      "/js/main.js",
-      "/js/lobby.js",
-      "/js/kd.js",
-      "/js/profile.js",
-      "/js/faceit.js",
-      "/js/history.js"
+      "/js/content.js",
+      "/js/common/faceit.js",
+      "/js/lobby/lobby.js",
+      "/js/profile/kd.js",
+      "/js/profile/profile.js",
+      "/js/profile/history.js"
   ]
   }],
   "browser_action": {

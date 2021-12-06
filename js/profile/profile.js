@@ -49,7 +49,7 @@ async function playerStats(data) {
     summary.appendChild(stats);
 }
 
-async function processStats() {
+async function getStats() {
     const username = window.location.href.substring(window.location.href.lastIndexOf('/') + 1);
 
     async function getUser(username) {
@@ -118,7 +118,7 @@ async function processStats() {
     });
 }
 
-async function profileFaceitLevel(){
+async function getFaceitRank() {
   const username = window.location.href.substring(window.location.href.lastIndexOf('/') + 1);
   const levelCols = {
     1: "#ededed",

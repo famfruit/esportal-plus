@@ -1,12 +1,10 @@
-async function calculateKd() {
+async function getKdButton() {
   const username = window.location.href.substring(window.location.href.lastIndexOf('/') + 1);
-  let userId = "";
   let bundleMatches = [];
   let scores = { "k": 0, "d": 0, "user": "" };
 
   async function getMatches(userId) {
     const date = new Date().getTime();
-    const url = `https://api.esportal.com/user_profile/get_latest_matches?_=${date}&id=${userId}&page=1&v=2`;
     let matchIndex = 1;
     for (let i = 0; i < 7; i++){
       resp = await fetch(`https://api.esportal.com/user_profile/get_latest_matches?_=${date}&id=${userId}&page=${matchIndex}&v=2`);

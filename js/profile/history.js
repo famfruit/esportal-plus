@@ -1,4 +1,4 @@
-async function processHistory(firstTime) {
+async function getHistory(firstTime) {
     const username = window.location.href.substring(window.location.href.lastIndexOf('/') + 1);
 
     async function getMatch(matchId) {
