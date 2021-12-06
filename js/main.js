@@ -2,13 +2,28 @@
 window.addEventListener('load', function () {
     let url = window.location.href
     if (url.includes("gather") || url.includes("match")){
-      processLobby();
+        processLobby();
     } else if (url.includes("profile")){
-      calculateKd();
-      profileFaceitLevel();
-      processStats();
-    }
+        calculateKd();
+        profileFaceitLevel();
+        processStats();
+        processHistory(true);
+             
+        const prevButton = document.getElementsByClassName("previous-next-buttons")[0].children[0];
+        const nextButton = document.getElementsByClassName("previous-next-buttons")[0].children[1];
+    
+        prevButton.addEventListener("click", function() {
+            if (!prevButton.className.includes("disabled")) {
+                setTimeout(function() { processHistory(false); }, 1000);
+            }
+        });
 
+        nextButton.addEventListener("click", function() {
+            if (!nextButton.className.includes("disabled")) {
+                setTimeout(function() { processHistory(false); }, 1000);
+            }
+        });
+    }
 });
 
 chrome.runtime.onMessage.addListener(
@@ -24,7 +39,23 @@ chrome.runtime.onMessage.addListener(
                     calculateKd();
                     profileFaceitLevel();
                     processStats();
-                }, 1000)
+                    processHistory(true);
+                }, 1000);
+                
+                const prevButton = document.getElementsByClassName("previous-next-buttons")[0].children[0];
+                const nextButton = document.getElementsByClassName("previous-next-buttons")[0].children[1];
+
+                prevButton.addEventListener("click", function() {
+                    if (!prevButton.className.includes("disabled")) {
+                        setTimeout(function() { processHistory(false); }, 1000);
+                    }
+                });
+
+                nextButton.addEventListener("click", function() {
+                    if (!nextButton.className.includes("disabled")) {
+                        setTimeout(function() { processHistory(false); }, 1000);
+                    }
+                });
             }
         }
     }
