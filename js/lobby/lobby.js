@@ -1,16 +1,5 @@
 function styleLobbyLevels(level){
-  const levelCols = {
-    1: "#ededed",
-    2: "#1ce200",
-    3: "#1ce200",
-    4: "#fec700",
-    5: "#fec700",
-    6: "#fec700",
-    7: "#fec700",
-    8: "#ff6309",
-    9: "#ff6309",
-    10: "#f91e00"
-  }
+  const levelCols = {1:"#ededed", 2:"#1ce200", 3:"#1ce200", 4:"#fec700", 5:"#fec700", 6:"#fec700", 7:"#fec700", 8:"#ff6309", 9:"#ff6309", 10:"#f91e00"}
   padd = (level[0] === 10) ? "2px 4px" : "2px 7px"
   wrap = document.createElement("div")
   wrap.classList.add("Tipsy-inlineblock-wrapper")
@@ -23,23 +12,23 @@ function styleLobbyLevels(level){
   wrap.appendChild(element)
   return wrap
 }
-async function getUser(element, username) {
+async function getUser(element, username, favMapElement) {
     const url = `https://api.esportal.com/user_profile/get?username=${username}`;
     try {
         const result = await this.fetch(url);
         const user = await result.json();
-        await getMatches(element, user.id);
+        await getMatches(element, user.id, favMapElement);
     } catch (error) {
         console.error(error);
     }
 }
 
-async function getMatches(element, userId) {
+async function getMatches(element, userId, favMapElement) {
     let kills = 0;
     let deaths = 0;
     const currentTime = Date.now();
     let matchList = [];
-
+    let favMatchList = {};
     let numberOfGames = 0;
     const url = `https://api.esportal.com/user_profile/get_latest_matches?_=${currentTime}&id=${userId}&page=1&v=2`;
     try {
@@ -54,6 +43,7 @@ async function getMatches(element, userId) {
                         kills += player.kills;
                         deaths += player.deaths;
                         numberOfGames += 1
+                        favMatchList[player.id] = player.favorite_map_id
                         if (player.elo_change > 0) {
                             matchList.push("<span style='color: green;'>W</span>");
                         } else {
@@ -68,7 +58,10 @@ async function getMatches(element, userId) {
             value = `${matchList.join(" ")} (${Math.round((kills / deaths) * 100) / 100})`;
         }
         if (element !== undefined) {
-            element.innerHTML = value;
+          // Appending data to table
+          mapElement = `<div style="width:44px;height:27px;border-radius:5px;background-size:cover;margin: 0 auto" class="match-lobby-info-map map${favMatchList[userId]}"></div>`
+          element.innerHTML = value
+          favMapElement.innerHTML = mapElement
         }
     } catch (error) {
         console.error(error);
@@ -89,6 +82,19 @@ async function getMatch(matchId) {
 async function processLobby() {
     const users = [...document.getElementsByClassName("match-lobby-team-username")];
     let index = 0;
+
+    /* Tablefix Header */
+    let tableFixFlag = false
+    let matchEnemyParent = document.querySelectorAll(".match-lobby-team-tables")[1].querySelector("thead").querySelector("tr")
+    let matchEnemyTable = matchEnemyParent.querySelectorAll("th")
+    if (matchEnemyTable.length != 5){  // Potential conflict here in the future with only looking at length
+      let matchEnemyHead = document.createElement("th")
+          matchEnemyHead.innerText = "Favorite Map"
+      matchEnemyParent.appendChild(matchEnemyHead)
+      tableFixFlag = true
+    }
+    /* End Tablefix Header */
+
     users.forEach(user => {
         const element = user.getElementsByTagName("span");
         let level = getFaceitLevel(element[0].innerText).then(level => {
@@ -98,14 +104,28 @@ async function processLobby() {
             user.parentElement.appendChild(levelWrap)
           }
         })
+
+        /* Tablefix - Columns */
+        if(index > 4 && tableFixFlag === true){
+          let matchEnemyRowParent = user.parentElement.parentElement
+          let matchEnemyRow = document.createElement("td")
+          matchEnemyRowParent.appendChild(matchEnemyRow)
+        }
+        /* End Tablefix - Columns */
+
         let tableItem = user.parentElement.parentElement.children[1];
         let headerItem = user.parentElement.parentElement.parentElement.parentElement.getElementsByTagName("thead")[0].children[0].children[1];
+        let tableItemMap = user.parentElement.parentElement.children[4];
+        let headerItemMap = user.parentElement.parentElement.parentElement.parentElement.getElementsByTagName("thead")[0].children[0].children[4];
+
         if (element.length > 0) {
-            getUser(tableItem, element[0].innerHTML);
+            getUser(tableItem, element[0].innerHTML, tableItemMap);
         }
         if (index % 5 === 0 && headerItem !== undefined) {
             headerItem.style["text-align"] = "left";
             headerItem.innerText = "Last 5 games";
+            headerItemMap.innerText = "Map";
+            headerItemMap.style["text-align"] = "center";
         }
         index += 1;
     });
