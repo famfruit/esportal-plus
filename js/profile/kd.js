@@ -15,7 +15,7 @@ async function getKdButton() {
       matchIndex++;
     }
   }
-  
+
   async function getUserID(username) {
     resp = await fetch(`https://api.esportal.com/user_profile/get?username=${username}`);
     result = await resp.json();
@@ -36,7 +36,6 @@ async function getKdButton() {
         if (players[x].username === username) {
           scores["k"] += players[x].kills;
           scores["d"] += players[x].deaths;
-          console.log(i + " username: ", username, " - kills: ", players[x].kills, " - deaths:", players[x].deaths);
         }
       }
     }
@@ -63,7 +62,6 @@ async function getKdButton() {
         getMatches(id).then(matches => {
           getIndividualMatches(bundleMatches).then(res => {
             avg = scores["k"] / scores["d"];
-            console.log(`avg K/D: ${avg.toFixed(2)}`, `${username}`);
 
             let wrap = document.querySelector(".user-profile-rank-rating");
             let textCol = getComputedStyle(wrap);
@@ -91,7 +89,6 @@ async function getKdButton() {
             // Completed - Remove button
             let button_holder = document.querySelector(".prel-kd");
             button_holder.remove();
-            console.log(`currentKd: ${currentKd} - avgDiff: ${avgDiff.toFixed(2)} - diffValue: ${diffValue}`);
           });
         });
       });
