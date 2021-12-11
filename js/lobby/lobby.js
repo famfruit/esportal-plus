@@ -1,16 +1,32 @@
 function styleLobbyLevels(level){
-  const levelCols = {1:"#ededed", 2:"#1ce200", 3:"#1ce200", 4:"#fec700", 5:"#fec700", 6:"#fec700", 7:"#fec700", 8:"#ff6309", 9:"#ff6309", 10:"#f91e00"}
-  padd = (level[0] === 10) ? "2px 4px" : "2px 7px"
-  wrap = document.createElement("div")
-  wrap.classList.add("Tipsy-inlineblock-wrapper")
+  const levelCols = {1:"#ededed", 2:"#1ce200", 3:"#1ce200", 4:"#fec700", 5:"#fec700", 6:"#fec700", 7:"#fec700", 8:"#ff6309", 9:"#ff6309", 10:"#f91e00"};
+  padd = (level[0] === 10) ? "2px 4px" : "2px 7px";
+  wrap = document.createElement("div");
+  wrap.classList.add("Tipsy-inlineblock-wrapper");
 
-  element = document.createElement("a")
-  element.href = `https://faceit.com/en/players/${level[1]}`
-  element.target = "_BLANK"
-  element.style.cssText = `color: ${levelCols[level[0]]};margin-left:10px;border-radius:50%;padding:${padd};border:1px solid ${levelCols[level[0]]}`
-  element.innerText = level[0]
-  wrap.appendChild(element)
-  return wrap
+  element = document.createElement("a");
+  element.href = `https://faceit.com/en/players/${level[1]}`;
+  element.target = "_BLANK";
+  element.style.cssText = `color: ${levelCols[level[0]]};margin-left:10px;border-radius:50%;padding:${padd};border:1px solid ${levelCols[level[0]]}`;
+  element.innerText = level[0];
+  wrap.appendChild(element);
+  return wrap;
+}
+async function testFunction(time, playerId){
+  let mapUrl = `https://esportal.com/api/user_profile/get_favorite_maps?_=${time}&id=${playerId}`;
+  let mapFetch = await fetch(mapUrl);
+  let mapResult = await mapFetch.json();
+  let resultMax = 0;
+  if(mapResult != null || !mapResult){
+    mapResult.forEach(maps => {
+      maps["mapwlr"] = maps.wins / maps.losses;
+      maps["total"] = maps.wins + maps.losses;
+    });
+  } else {
+    return "";
+  }
+  mapResult.sort((a, b) => (a.mapwlr > b.mapwlr) ? 1 : -1);
+  return [mapResult, playerId];
 }
 async function getUser(element, username, favMapElement) {
     const url = `https://api.esportal.com/user_profile/get?username=${username}`;
@@ -28,7 +44,9 @@ async function getMatches(element, userId, favMapElement) {
     let deaths = 0;
     const currentTime = Date.now();
     let matchList = [];
-    let favMatchList = {};
+    let avgMapsPlayed = [];
+    let topMatchList = {};
+
     let numberOfGames = 0;
     const url = `https://api.esportal.com/user_profile/get_latest_matches?_=${currentTime}&id=${userId}&page=1&v=2`;
     try {
@@ -42,8 +60,16 @@ async function getMatches(element, userId, favMapElement) {
                     if (userId === player.id && numberOfGames < 5) {
                         kills += player.kills;
                         deaths += player.deaths;
-                        numberOfGames += 1
-                        favMatchList[player.id] = player.favorite_map_id
+                        numberOfGames += 1;
+                        if(!topMatchList["id"]){
+                          let playerMapData = testFunction(currentTime, player.id).then((value) => {
+                            value[0].forEach(map => {
+                              avgMapsPlayed.push(map["total"]);
+                            });
+                            topMatchList["map"] = value[0];
+                          });
+                          topMatchList["id"] = player.id;
+                        }
                         if (player.elo_change > 0) {
                             matchList.push("<span style='color: green;'>W</span>");
                         } else {
@@ -58,8 +84,20 @@ async function getMatches(element, userId, favMapElement) {
             value = `${matchList.join(" ")} (${Math.round((kills / deaths) * 100) / 100})`;
         }
         if (element !== undefined) {
-          // Appending data to table
-          mapElement = `<div style="width:44px;height:27px;border-radius:5px;background-size:cover;margin: 0 auto" class="match-lobby-info-map map${favMatchList[userId]}"></div>`
+          mapIndex = 0;
+          usersTopMaps = {};
+          avgMapsPlayed = eval(avgMapsPlayed.join('+'))/avgMapsPlayed.length;
+          topMatchList["avg"] = avgMapsPlayed;
+          topMatchList["map"].forEach(map => {
+            mapGamesPlayed = map.wins + map.losses;
+            if(mapGamesPlayed >= topMatchList["avg"]) {
+              userAvgMap = map.wins / map.losses;
+              usersTopMaps[mapIndex] = {"mapid": map.id, "wins": map.wins, "losses": map.losses, "avg": userAvgMap};
+              mapIndex++;
+            }
+          })
+          /* --------- */
+          mapElement = `<div style="width:44px;height:27px;border-radius:5px;background-size:cover;margin: 0 auto" class="match-lobby-info-map map${usersTopMaps[mapIndex - 1]["mapid"]}"></div>`
           element.innerHTML = value
           favMapElement.innerHTML = mapElement
         }
@@ -85,11 +123,16 @@ async function processLobby() {
 
     /* Tablefix Header */
     let tableFixFlag = false
-    let matchEnemyParent = document.querySelectorAll(".match-lobby-team-tables")[1].querySelector("thead").querySelector("tr")
+
+    while(!document.querySelectorAll(".match-lobby-team-tables")[1]) {
+      await new Promise(r => setTimeout(r, 100));
+    }
+
+    let matchEnemyParent = document.querySelectorAll(".match-lobby-team-tables")[1].children[0].children[0]
     let matchEnemyTable = matchEnemyParent.querySelectorAll("th")
     if (matchEnemyTable.length != 5){  // Potential conflict here in the future with only looking at length
       let matchEnemyHead = document.createElement("th")
-          matchEnemyHead.innerText = "Favorite Map"
+          matchEnemyHead.innerText = "Map"
       matchEnemyParent.appendChild(matchEnemyHead)
       tableFixFlag = true
     }

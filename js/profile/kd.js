@@ -15,7 +15,7 @@ async function getKdButton() {
       matchIndex++;
     }
   }
-
+  
   async function getUserID(username) {
     resp = await fetch(`https://api.esportal.com/user_profile/get?username=${username}`);
     result = await resp.json();
@@ -87,7 +87,7 @@ async function getKdButton() {
             prel_wrap.classList.add("section", "is-right", "prel-kd");
             prel_wrap.innerHTML = content.trim();
             wrap.appendChild(prel_wrap);
-  
+
             // Completed - Remove button
             let button_holder = document.querySelector(".prel-kd");
             button_holder.remove();
