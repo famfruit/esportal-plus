@@ -7,9 +7,9 @@
 # Features
 > Lobby:
 * History of 5 latest games, W/L and average K/D
-* Favorite map (Soon TM)
+* Participants favorite and best map
 
-<img src="https://i.imgur.com/uxWbc11.png" width="41%"></br>
+<img src="https://i.imgur.com/Bo1TO62.png" width="80%"></br>
 
 > Profile:
 * Faceit level
