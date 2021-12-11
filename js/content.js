@@ -42,10 +42,13 @@ function prolongedPageLoad(ele, type, callback){
 }
 
 function processProfile() {
-  prolongedPageLoad(".user-stats-latest-matches", "tbody-populated-tr", function(status){
+  pageLoaded(function(status){
     getKdButton();
     getFaceitRank();
     getStats();
+  })
+  // Run when match-table has loaded
+  prolongedPageLoad(".user-stats-latest-matches", "tbody-populated-tr", function(status){
     getHistory(true);
   })
 }
@@ -58,7 +61,7 @@ function matchHistoryPageListener() {
         if (!prevButton.className.includes("disabled")) {
             pageLoaded(function(status){
               if(status == true){
-                processHistory(false)
+                getHistory(false)
               }
             })
         }
@@ -68,7 +71,7 @@ function matchHistoryPageListener() {
         if (!nextButton.className.includes("disabled")) {
             pageLoaded(function(status){
               if(status == true){
-                processHistory(false)
+                getHistory(false)
               }
             })
         }
