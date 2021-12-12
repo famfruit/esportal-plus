@@ -43,6 +43,7 @@ function prolongedPageLoad(ele, type, callback){
 
 function processProfile() {
   pageLoaded(function(status){
+    hideMain();
     getKdButton();
     getFaceitRank();
     getStats();

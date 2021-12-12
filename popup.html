@@ -2,44 +2,18 @@
   <head>
     <title>Esportal +</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
-    <style>
-      body {
-        width: 320px;
-        height: 80px;
-        margin: 0;
-        background-color: #1b1d26;
-        font-family: "Roboto", sans-serif;
-        color: white;
-      }
-      #root {
-        display: flex;
-        justify-content: center;
-        flex-flow: column;
-      }
-      .item {
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        font-size: 15px;
-        min-height: 64px;
-        padding: 0px 10px;
-        line-height: 1.6;
-        letter-spacing: 0.0075em;
-      }
-      .header {
-        font-size: 1.25rem;
-        font-weight: 500;
-        background-color: #ff8020;
-      }
-      .version {
-        font-style: italic;
-      }
-    </style>
+    <link rel="stylesheet" href="js/popup/style.css">
   </head>
   <body>
     <div id="root">
-      <div class="item header">Esportal +</div>
-      <div class="item version">Version: 1.0.0</div>
+      <div class="item header">Esportal + <span id="appv"></span></div>
+      <div class="items-holder">
+        <h1>Settings</h1>
+        <div class="set-holder"></div>
+        <h1>Features</h1>
+        <div class="fea-holder"></div>
+      </div>
     </div>
+    <script src="js/popup/popup.js"></script>
   </body>
 </html>
