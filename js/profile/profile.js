@@ -1,28 +1,30 @@
+
 async function playerStats(data) {
-    const summary = document.getElementsByClassName("user-profile-summary")[0];
+    if(userStorage.settings.matchStats != false){
+      smallIconSetting = userStorage.settings.smallCardsProfile
+      const summary = document.getElementsByClassName("user-profile-summary")[0];
 
-    let header = document.createElement("div");
-    header.className = "user-profile-heading";
-    header.style.cssText = "margin-top: 15px;margin-bottom: 15px;"
-    let headerValue = document.createTextNode("Latest 5 games");
-    header.appendChild(headerValue);
+      let header = document.createElement("div");
+      header.className = "user-profile-heading";
+      header.style.cssText = "margin-top: 15px;margin-bottom: 15px;"
+      let headerValue = document.createTextNode("Latest 5 games");
+      header.appendChild(headerValue);
 
-    summary.appendChild(header);
+      summary.appendChild(header);
 
-    let stats = document.createElement("div");
-    let boxes = document.createElement("div");
-    boxes.className = "user-profile-stats-boxes";
-    boxes.style.cssText = "margin-top: 15px;"
+      let stats = document.createElement("div");
+      let boxes = document.createElement("div");
+      boxes.className = "user-profile-stats-boxes";
+      boxes.style.cssText = "margin-top: 15px;"
 
-    const icons = ["records-kdr", "records-win-ratio", "records-headshot", "records-drops"];
-    const labels = ["K/D-kvot", "Vinstkvot", "Headshot %", "Drop ratio"];
+      const icons = ["records-kdr", "records-win-ratio", "records-headshot", "records-drops"];
+      const labels = ["K/D-kvot", "Vinstkvot", "Headshot %", "Drop ratio"];
 
-    for (let i = 0; i < 4; i++) {
+      for (let i = 0; i < 4; i++) {
         let box = document.createElement("div");
         box.className = "user-profile-stats-box";
 
-        let icon = document.createElement("div");
-        icon.className = "user-profile-stats-box-icon " + icons[i];
+
 
         let value = document.createElement("div");
         value.className = "user-profile-stats-box-value";
@@ -39,14 +41,19 @@ async function playerStats(data) {
         value.appendChild(tipsy);
         value.appendChild(label);
 
-        box.appendChild(icon);
+        if (smallIconSetting != true){
+          let icon = document.createElement("div");
+          icon.className = "user-profile-stats-box-icon " + icons[i];
+          box.appendChild(icon);
+        }
         box.appendChild(value);
 
         boxes.appendChild(box);
-    }
-    stats.appendChild(boxes);
+      }
+      stats.appendChild(boxes);
 
-    summary.appendChild(stats);
+      summary.appendChild(stats);
+    }
 }
 
 async function getStats() {
