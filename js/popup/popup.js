@@ -1,5 +1,6 @@
 const setHolder = document.querySelector(".set-holder")
 const feaHolder = document.querySelector(".fea-holder")
+const hidHolder = document.querySelector(".hid-holder")
 let buttons, settings
 
 async function popupMain(){
@@ -42,8 +43,10 @@ function setupButtons(){
     element = `<button class="${settings[button.setting]}" value="${button.setting}">${button.text}</button>`
     if(button.type == "setting"){
       setHolder.innerHTML += element
-    } else {
+    } else if (button.type == "feature"){
       feaHolder.innerHTML += element
+    } else {
+      hidHolder.innerHTML += element
     }
   })
 }

@@ -8,15 +8,17 @@ const userStorage = {
       matchStats: true,
       hideMedalsProfile: true,
       hideMissionsProfile: true,
-      hideActivityProfile: true
+      hideActivityProfile: true,
+      smallCardsProfile: true
     },
     buttons: [
       {setting: "autoAccept", text: "Autoaccepting Matches", type:"setting"},
       {setting: "autoCommend", text: "Autocommend Premade Teammates", type:"setting"},
       {setting: "hideLivestreams", text: "Hide All Livestreams", type:"setting"},
-      {setting: "hideMedalsProfile", text: "Hide Medals Profile", type:"setting"},
-      {setting: "hideMissionsProfile", text:"Hide Missions Profile", type:"setting"},
-      {setting: "hideActivityProfile", text:"Hide Activityfeed Profile", type:"setting"},
+      {setting: "hideMedalsProfile", text: "Medals", type:"hide"},
+      {setting: "hideMissionsProfile", text:"Missions", type:"hide"},
+      {setting: "hideActivityProfile", text:"Activity", type:"hide"},
+      {setting: "smallCardsProfile", text: "Smaller Profile Cards", type:"setting"},
       {setting: "profileKdButton", text: "KDR Profile Button", type:"feature"},
       {setting: "matchStats", text: "Advanced Match Stats", type:"feature"},
       {setting: "faceitlevels", text: "Faceit Levels", type:"feature"}
@@ -35,6 +37,7 @@ chrome.tabs.onUpdated.addListener(
     }
 );
 chrome.storage.sync.get(['isset'], function(result) {
+  //chrome.storage.sync.clear()
   if(result != true){
     chrome.storage.sync.set(userStorage);
   }

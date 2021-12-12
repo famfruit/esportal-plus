@@ -1,4 +1,11 @@
 const TIMEOUT = 100; // ms
+let userStorage // Global storage var
+function loadStorage(){
+  chrome.storage.sync.get(null, function(data) {
+      userStorage = data
+  })
+}
+loadStorage()
 
 function pageLoaded(callback){
   let trigger = setInterval(function(){
@@ -88,6 +95,10 @@ pageLoaded(function(status){
         processProfile();
         matchHistoryPageListener();
     }
+    // Run Globally
+    pageLoaded(function(status){
+      hideLivestreams()
+    })
   }
 })
 
@@ -104,6 +115,8 @@ chrome.runtime.onMessage.addListener(
                     processProfile();
                     matchHistoryPageListener();
                 }
+                // Run Globally
+                hideLivestreams()
               }
             })
         }

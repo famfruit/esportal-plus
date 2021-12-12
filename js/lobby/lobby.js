@@ -118,58 +118,60 @@ async function getMatch(matchId) {
 }
 
 async function processLobby() {
-    const users = [...document.getElementsByClassName("match-lobby-team-username")];
-    let index = 0;
+    if (userStorage.settings.matchStats != false){
+      const users = [...document.getElementsByClassName("match-lobby-team-username")];
+      let index = 0;
 
-    /* Tablefix Header */
-    let tableFixFlag = false
+      /* Tablefix Header */
+      let tableFixFlag = false
 
-    while(!document.querySelectorAll(".match-lobby-team-tables")[1]) {
-      await new Promise(r => setTimeout(r, 100));
-    }
+      while(!document.querySelectorAll(".match-lobby-team-tables")[1]) {
+        await new Promise(r => setTimeout(r, 100));
+      }
 
-    let matchEnemyParent = document.querySelectorAll(".match-lobby-team-tables")[1].children[0].children[0]
-    let matchEnemyTable = matchEnemyParent.querySelectorAll("th")
-    if (matchEnemyTable.length != 5){  // Potential conflict here in the future with only looking at length
-      let matchEnemyHead = document.createElement("th")
-          matchEnemyHead.innerText = "Map"
-      matchEnemyParent.appendChild(matchEnemyHead)
-      tableFixFlag = true
-    }
-    /* End Tablefix Header */
+      let matchEnemyParent = document.querySelectorAll(".match-lobby-team-tables")[1].children[0].children[0]
+      let matchEnemyTable = matchEnemyParent.querySelectorAll("th")
+      if (matchEnemyTable.length != 5){  // Potential conflict here in the future with only looking at length
+        let matchEnemyHead = document.createElement("th")
+            matchEnemyHead.innerText = "Map"
+        matchEnemyParent.appendChild(matchEnemyHead)
+        tableFixFlag = true
+      }
+      /* End Tablefix Header */
 
-    users.forEach(user => {
-        const element = user.getElementsByTagName("span");
-        let level = getFaceitLevel(element[0].innerText).then(level => {
-          if(level === undefined) {return}
-          if(level[0] > 0){
-            levelWrap = styleLobbyLevels(level)
-            user.parentElement.appendChild(levelWrap)
+      users.forEach(user => {
+          const element = user.getElementsByTagName("span");
+          let level = getFaceitLevel(element[0].innerText).then(level => {
+            if(level === undefined) {return}
+            if(level[0] > 0){
+              levelWrap = styleLobbyLevels(level)
+              user.parentElement.appendChild(levelWrap)
+            }
+          })
+
+          /* Tablefix - Columns */
+          if(index > 4 && tableFixFlag === true){
+            let matchEnemyRowParent = user.parentElement.parentElement
+            let matchEnemyRow = document.createElement("td")
+            matchEnemyRowParent.appendChild(matchEnemyRow)
           }
-        })
+          /* End Tablefix - Columns */
 
-        /* Tablefix - Columns */
-        if(index > 4 && tableFixFlag === true){
-          let matchEnemyRowParent = user.parentElement.parentElement
-          let matchEnemyRow = document.createElement("td")
-          matchEnemyRowParent.appendChild(matchEnemyRow)
-        }
-        /* End Tablefix - Columns */
+          let tableItem = user.parentElement.parentElement.children[1];
+          let headerItem = user.parentElement.parentElement.parentElement.parentElement.getElementsByTagName("thead")[0].children[0].children[1];
+          let tableItemMap = user.parentElement.parentElement.children[4];
+          let headerItemMap = user.parentElement.parentElement.parentElement.parentElement.getElementsByTagName("thead")[0].children[0].children[4];
 
-        let tableItem = user.parentElement.parentElement.children[1];
-        let headerItem = user.parentElement.parentElement.parentElement.parentElement.getElementsByTagName("thead")[0].children[0].children[1];
-        let tableItemMap = user.parentElement.parentElement.children[4];
-        let headerItemMap = user.parentElement.parentElement.parentElement.parentElement.getElementsByTagName("thead")[0].children[0].children[4];
-
-        if (element.length > 0) {
-            getUser(tableItem, element[0].innerHTML, tableItemMap);
-        }
-        if (index % 5 === 0 && headerItem !== undefined) {
-            headerItem.style["text-align"] = "left";
-            headerItem.innerText = "Last 5 games";
-            headerItemMap.innerText = "Map";
-            headerItemMap.style["text-align"] = "center";
-        }
-        index += 1;
-    });
+          if (element.length > 0) {
+              getUser(tableItem, element[0].innerHTML, tableItemMap);
+          }
+          if (index % 5 === 0 && headerItem !== undefined) {
+              headerItem.style["text-align"] = "left";
+              headerItem.innerText = "Last 5 games";
+              headerItemMap.innerText = "Map";
+              headerItemMap.style["text-align"] = "center";
+          }
+          index += 1;
+      });
+    }
 }
