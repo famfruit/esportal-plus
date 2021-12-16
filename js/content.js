@@ -1,64 +1,69 @@
+// Constants
 const TIMEOUT = 100; // ms
-let userStorage // Global storage var
-function loadStorage(){
-  chrome.storage.sync.get(null, function(data) {
-      userStorage = data
-  })
-}
-loadStorage()
 
-function pageLoaded(callback){
-  let trigger = setInterval(function(){
-      let loadIndex = 0;
-      if (!document.querySelector(".page-title")){
-        loadIndex = 1;
-      }
-      if (document.querySelector(".page-title") || loadIndex == 1){
-        loadIndex = 2;
-      }
-      if (document.getElementById("app").classList.contains("done") == true) {
-        loadIndex = 3;
-      }
-      if (document.getElementById("content-wrapper").classList.contains("inner-wrapper") && loadIndex === 3) {
-        clearInterval(trigger);
-        callback(true);
-      }
-  }, TIMEOUT)
+// Globals
+let userStorage;
+
+function loadStorage() {
+    chrome.storage.sync.get(null, function(data) {
+        userStorage = data
+    });
 }
 
-function prolongedPageLoad(ele, type, callback){
-  pageLoaded(function(status){
-    if(status == true){
-      let trigger = setInterval(function(){
-        if(type == "tbody-populated-tr"){
-          // tbody-populated-tr
-          // Check if tbody inside element has trs
-          // If trs has loaded, run function
-          // element = document.querySelector(ele).children[1].querySelectorAll("tr")
-          if (document.querySelector(ele)){
-            element = document.querySelector(ele).querySelector("tbody").getElementsByTagName("tr")
-            if(element.length > 0){
-              clearInterval(trigger);
-              callback(true);
-            }
-          }
-        } // Continue here
-      }, TIMEOUT)
-    }
-  })
+loadStorage();
+
+function pageLoaded(callback) {
+    let trigger = setInterval(function() {
+        let loadIndex = 0;
+        if (!document.querySelector(".page-title")) {
+            loadIndex = 1;
+        }
+        if (document.querySelector(".page-title") || loadIndex == 1) {
+            loadIndex = 2;
+        }
+        if (document.getElementById("app").classList.contains("done")) {
+            loadIndex = 3;
+        }
+        if (document.getElementById("content-wrapper").classList.contains("inner-wrapper") && loadIndex === 3) {
+            clearInterval(trigger);
+            callback(true);
+        }
+    }, TIMEOUT);
+}
+
+function prolongedPageLoad(elem, type, callback) {
+    pageLoaded(function(status) {
+        if (status == true) {
+            let trigger = setInterval(function() {
+                if (type == "tbody-populated-tr") {
+                    // tbody-populated-tr
+                    // Check if tbody inside element has trs
+                    // If trs has loaded, run function
+                    // element = document.querySelector(ele).children[1].querySelectorAll("tr")
+                    if (document.querySelector(elem)) {
+                        element = document.querySelector(elem).querySelector("tbody").getElementsByTagName("tr");
+                        if (element.length > 0) {
+                            clearInterval(trigger);
+                            callback(true);
+                        }
+                    }
+                } // Continue here
+            }, TIMEOUT);
+        }
+    });
 }
 
 function processProfile() {
-  pageLoaded(function(status){
-    hideMain();
-    getKdButton();
-    getFaceitRank();
-    getStats();
-  })
-  // Run when match-table has loaded
-  prolongedPageLoad(".user-stats-latest-matches", "tbody-populated-tr", function(status){
-    getHistory(true);
-  })
+    pageLoaded(function(status) {
+        hideMain();
+        getKdButton();
+        getFaceitRank();
+        getStats();
+    });
+    // Run when match-table has loaded
+    prolongedPageLoad(".user-stats-latest-matches", "tbody-populated-tr", function(status) {
+        getHistory(true);
+    });
 }
 
 function matchHistoryPageListener() {
@@ -67,58 +72,57 @@ function matchHistoryPageListener() {
 
     prevButton.addEventListener("click", function() {
         if (!prevButton.className.includes("disabled")) {
-            pageLoaded(function(status){
-              if(status == true){
-                getHistory(false)
-              }
-            })
+            pageLoaded(function(status) {
+                if (status) {
+                    getHistory(false);
+                }
+            });
         }
     });
 
     nextButton.addEventListener("click", function() {
         if (!nextButton.className.includes("disabled")) {
-            pageLoaded(function(status){
-              if(status == true){
-                getHistory(false)
-              }
-            })
+            pageLoaded(function(status) {
+                if (status){
+                    getHistory(false);
+                }
+            });
         }
     });
 }
 
-pageLoaded(function(status){
-  if(status == true){
-    let url = window.location.href
-    if (url.includes("gather") || url.includes("match")){
-        processLobby();
-    } else if (url.includes("profile")){
-        processProfile();
-        matchHistoryPageListener();
+pageLoaded(function(status) {
+    if (status) {
+        let url = window.location.href;
+        if (url.includes("gather") || url.includes("match")) {
+            processLobby();
+        } else if (url.includes("profile")) {
+            processProfile();
+            matchHistoryPageListener();
+        }
+        // Run Globally
+        pageLoaded(function(status){
+            hideLivestreams();
+        });
     }
-    // Run Globally
-    pageLoaded(function(status){
-      hideLivestreams()
-    })
-  }
-})
-
+});
 
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
         // Listen for messages sent from background.js
         if (request.message === 'matchPage') {
-            pageLoaded(function(status){
-              if(status == true){
-                if (request.url.includes("gather") || request.url.includes("match")) {
-                    processLobby();
-                } else if (request.url.includes("profile")){
-                    processProfile();
-                    matchHistoryPageListener();
+            pageLoaded(function(status) {
+                if (status) {
+                    if (request.url.includes("gather") || request.url.includes("match")) {
+                        processLobby();
+                    } else if (request.url.includes("profile")) {
+                        processProfile();
+                        matchHistoryPageListener();
+                    }
+                    // Run Globally
+                    hideLivestreams();
                 }
-                // Run Globally
-                hideLivestreams()
-              }
-            })
+            });
         }
     }
 );

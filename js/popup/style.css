@@ -6,16 +6,19 @@ body {
   font-family: "Roboto", sans-serif;
   color: white;
 }
+
 #appv {
   position: absolute;
   right: 10px;
   font-size: 11px;
 }
+
 #root {
   display: flex;
   justify-content: center;
   flex-flow: column;
 }
+
 .item {
   display: flex;
   justify-content: flex-start;
@@ -26,39 +29,47 @@ body {
   line-height: 1.6;
   letter-spacing: 0.0075em;
 }
+
 .header {
   font-size: 1.25rem;
   font-weight: 500;
   background-color: #ff8020;
 }
+
 .version {
   font-style: italic;
   font-size: 11px;
   color: #858a9c
 }
+
 .items-holder {
   width: 100%;
   padding: 20px;
   position: relative;
   box-sizing: border-box;
 }
+
 .hid-holder button {
   width: 30%;
   margin-right: 5%;
 }
+
 .hid-holder button:last-child {
   margin-right: 0
 }
+
 h1 {
   font-weight: 500;
   font-size: 16px;
 }
+
 button {
   margin: 0 auto;
   width: 100%;
   box-sizing: border-box;
   margin-bottom: 10px;
 }
+
 button.false {
   cursor: pointer;
   background: 0 0;
@@ -71,6 +82,7 @@ button.false {
   color: rgb(63 65 81 / 100%);
   font-weight: 600;
 }
+
 button.true {
   cursor: pointer;
   background-color: #00a9ea;

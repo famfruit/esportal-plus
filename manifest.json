@@ -5,8 +5,8 @@
   "manifest_version": 2,
   "permissions": [
     "tabs",
-    "https://api.esportal.com/",
-    "storage"
+    "storage",
+    "https://api.esportal.com/"
   ],
   "icons": {
     "16": "/img/icon16.png",
@@ -20,6 +20,7 @@
     ],
     "js": [
       "/js/content.js",
+      "/js/common/api.js",
       "/js/common/faceit.js",
       "/js/common/hide.js",
       "/js/common/livestream.js",
