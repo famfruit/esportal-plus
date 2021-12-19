@@ -19,7 +19,7 @@ function bindEventButtons() {
 
 function toggleSetting() {
     // Set new boolean and classname of the button
-    state = this.classList[0] == "true";
+    state = this.classList[0] == "true" ? "false" : "true";
     action = this.value;
     settings.settings[action] = state;
     chrome.storage.sync.set({"settings": settings});
