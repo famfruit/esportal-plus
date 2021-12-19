@@ -30,17 +30,6 @@ async function testFunction(time, playerId) {
     return [mapResult, playerId];
 }
 
-async function getUser(element, username, favMapElement) {
-    const url = `https://api.esportal.com/user_profile/get?username=${username}`;
-    try {
-        const result = await this.fetch(url);
-        const user = await result.json();
-        await getMatches(element, user.id, favMapElement);
-    } catch (error) {
-        console.error(error);
-    }
-}
-
 async function getMatches(element, userId, favMapElement) {
     let kills = 0;
     let deaths = 0;
@@ -108,19 +97,8 @@ async function getMatches(element, userId, favMapElement) {
     }
 }
 
-async function getMatch(matchId) {
-    const url = `https://api.esportal.com/match/get?_=1&id=${matchId}`;
-    try {
-        const result = await this.fetch(url);
-        const match = await result.json();
-        return match;
-    } catch (error) {
-        return null;
-    }
-}
-
 async function processLobby() {
-    if (userStorage.settings.matchStats != false){
+    //if (userStorage.settings.matchStats != false){
         const users = [...document.getElementsByClassName("match-lobby-team-username")];
         let index = 0;
 
@@ -143,21 +121,21 @@ async function processLobby() {
 
         users.forEach(user => {
             const element = user.getElementsByTagName("span");
-            let level = getFaceitLevel(element[0].innerText).then(level => {
+            /*let level = getFaceitLevel(element[0].innerText).then(level => {
                 if (level === undefined) {
-                    return
+                    return;
                 }
-                if (level[0] > 0){
+                if (level[0] > 0) {
                     levelWrap = styleLobbyLevels(level);
                     user.parentElement.appendChild(levelWrap);
                 }
-            });
+            });*/
 
             /* Tablefix - Columns */
             if(index > 4 && tableFixFlag) {
                 let matchEnemyRowParent = user.parentElement.parentElement;
                 let matchEnemyRow = document.createElement("td");
-                matchEnemyRowParent.appendChild(matchEnemyRow)
+                matchEnemyRowParent.appendChild(matchEnemyRow);
             }
             /* End Tablefix - Columns */
 
@@ -167,8 +145,11 @@ async function processLobby() {
             let headerItemMap = user.parentElement.parentElement.parentElement.parentElement.getElementsByTagName("thead")[0].children[0].children[4];
 
             if (element.length > 0) {
-                getUser(tableItem, element[0].innerHTML, tableItemMap);
+                getUser(username).then(user => {
+                    getMatches(element[0].innerHTML, user.id, tableItemMap);
+                });
             }
+
             if (index % 5 === 0 && headerItem !== undefined) {
                 headerItem.style["text-align"] = "left";
                 headerItem.innerText = "Last 5 games";
@@ -177,5 +158,5 @@ async function processLobby() {
             }
             index += 1;
         });
-    }
+    //}
 }

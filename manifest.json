@@ -6,7 +6,8 @@
   "permissions": [
     "tabs",
     "storage",
-    "https://api.esportal.com/"
+    "https://api.esportal.com/*",
+    "https://api.faceit.com/*"
   ],
   "icons": {
     "16": "/img/icon16.png",
@@ -22,8 +23,6 @@
       "/js/content.js",
       "/js/common/api.js",
       "/js/common/faceit.js",
-      "/js/common/hide.js",
-      "/js/common/livestream.js",
       "/js/lobby/lobby.js",
       "/js/profile/kd.js",
       "/js/profile/profile.js",

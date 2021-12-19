@@ -1,7 +1,7 @@
 
 async function playerStats(data) {
-    if (!userStorage.settings.matchStats) {
-        smallIconSetting = userStorage.settings.smallCardsProfile
+    //if (!userStorage.settings.matchStats) {
+        // smallIconSetting = userStorage.settings.smallCardsProfile;:
         const summary = document.getElementsByClassName("user-profile-summary")[0];
 
         let header = document.createElement("div");
@@ -39,32 +39,21 @@ async function playerStats(data) {
             value.appendChild(tipsy);
             value.appendChild(label);
 
-            if (!smallIconSetting) {
+            /*if (!smallIconSetting) {
                 let icon = document.createElement("div");
                 icon.className = "user-profile-stats-box-icon " + icons[i];
                 box.appendChild(icon);
-            }
+            }*/
             box.appendChild(value);
             boxes.appendChild(box);
         }
         stats.appendChild(boxes);
         summary.appendChild(stats);
-    }
+    //}
 }
 
 async function getStats() {
     const username = window.location.href.substring(window.location.href.lastIndexOf('/') + 1);
-
-    async function getUser(username) {
-        const url = `https://api.esportal.com/user_profile/get?username=${username}`;
-        try {
-            const result = await fetch(url);
-            const user = await result.json();
-            return user.id;
-        } catch (error) {
-            console.error(error);
-        }
-    }
 
     async function getStats(userId) {
         let kills = 0;
@@ -114,8 +103,8 @@ async function getStats() {
         }
     }
 
-    getUser(username).then(id => {
-        getStats(id).then(stats => {
+    getUser(username).then(user => {
+        getStats(user.id).then(stats => {
             playerStats(stats);
         });
     });
@@ -135,7 +124,7 @@ async function getFaceitRank() {
         9: "#ff6309",
         10: "#f91e00"
     }
-    level = await getFaceitLevel(username);
+    // level = await getFaceitLevel(username);
     wrapper = document.querySelector(".user-profile-rank-rating").querySelectorAll(".section")[0];
     span = document.createElement("a");
     span.innerHTML = level[0];

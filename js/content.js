@@ -15,16 +15,19 @@ loadStorage();
 function pageLoaded(callback) {
     let trigger = setInterval(function() {
         let loadIndex = 0;
-        if (!document.querySelector(".page-title")) {
+        let pageTitle = document.querySelector(".page-title");
+        let app = document.getElementById("app");
+        let contentWrapper = document.getElementById("content-wrapper");
+        if (pageTitle) {
             loadIndex = 1;
         }
-        if (document.querySelector(".page-title") || loadIndex == 1) {
+        if (pageTitle || loadIndex == 1) {
             loadIndex = 2;
         }
-        if (document.getElementById("app").classList.contains("done")) {
+        if (app && app.classList.contains("done")) {
             loadIndex = 3;
         }
-        if (document.getElementById("content-wrapper").classList.contains("inner-wrapper") && loadIndex === 3) {
+        if (contentWrapper && contentWrapper.classList.contains("inner-wrapper") && loadIndex === 3) {
             clearInterval(trigger);
             callback(true);
         }
@@ -55,9 +58,9 @@ function prolongedPageLoad(elem, type, callback) {
 
 function processProfile() {
     pageLoaded(function(status) {
-        hideMain();
+        // hideMain();
         getKdButton();
-        getFaceitRank();
+        // getFaceitRank();
         getStats();
     });
     // Run when match-table has loaded
@@ -94,7 +97,7 @@ function matchHistoryPageListener() {
 pageLoaded(function(status) {
     if (status) {
         let url = window.location.href;
-        if (url.includes("gather") || url.includes("match")) {
+        if (url.includes("gather") || (url.includes("match") && !url.includes("matchmaking"))) {
             processLobby();
         } else if (url.includes("profile")) {
             processProfile();
@@ -102,7 +105,7 @@ pageLoaded(function(status) {
         }
         // Run Globally
         pageLoaded(function(status){
-            hideLivestreams();
+            //hideLivestreams();
         });
     }
 });
@@ -120,9 +123,45 @@ chrome.runtime.onMessage.addListener(
                         matchHistoryPageListener();
                     }
                     // Run Globally
-                    hideLivestreams();
+                    //hideLivestreams();
                 }
             });
+        } else if (request.message === 'profilePage') {
+            const levelCols = {
+                1: "#ededed",
+                2: "#1ce200",
+                3: "#1ce200",
+                4: "#fec700",
+                5: "#fec700",
+                6: "#fec700",
+                7: "#fec700",
+                8: "#ff6309",
+                9: "#ff6309",
+                10: "#f91e00"
+            }
+
+            if (request.data) {
+                if (request.data.payload.players.results.length != 0 && request.data.payload.players.results[0].games.length != 0) {
+                    games = request.data.payload.players.results[0].games[0];
+                } else {
+                    games = "";
+                }
+                if (!games || games == "") {
+                    return ["", ""];
+                } else if (games.name == "csgo") {
+                    level = games.skill_level
+                    nick = request.data.payload.players.results[0].nickname;
+                    setTimeout(function () {
+                        wrapper = document.querySelector(".user-profile-rank-rating").querySelectorAll(".section")[0];
+                        span = document.createElement("a");
+                        span.innerHTML = level;
+                        span.href = `https://faceit.com/en/players/${nick}`;
+                        span.target = "_BLANK";
+                        span.style.cssText = `color: ${levelCols[level]};margin-left:10px;border-radius:50%;padding:3px 8px;border:2px solid ${levelCols[level]}`;
+                        wrapper.appendChild(span);
+                    }, 1000);
+                }
+            }
         }
     }
 );

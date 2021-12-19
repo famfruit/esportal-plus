@@ -1,5 +1,5 @@
 async function getKdButton() {
-    if (userStorage.settings.profileKdButton != false){
+    //if (!userStorage.settings.profileKdButton) {
         // Run logic
         const username = window.location.href.substring(window.location.href.lastIndexOf('/') + 1);
         let bundleMatches = [];
@@ -18,49 +18,42 @@ async function getKdButton() {
             }
         }
 
-        async function getUserID(username) {
-            let resp = await fetch(`https://api.esportal.com/user_profile/get?username=${username}`);
-            let result = await resp.json();
-            return result.id;
-        }
-
         async function getIndividualMatches(array) {
             array.splice(0, 5);
             scores["username"] = window.location.href.substring(window.location.href.lastIndexOf('/') + 1);
             for (let i = 0; i < array.length; i++) {
                 let matchID = array[i].id;
-                let url = `https://api.esportal.com/match/get?_=0&id=${matchID}`;
-                let resp = await fetch(url);
-                let res = await resp.json();
-
-                players = res.players;
-                for (let x = 0; x < players.length; x++) {
-                    if (players[x].username === username) {
-                        scores["k"] += players[x].kills;
-                        scores["d"] += players[x].deaths;
+                getMatch(matchID).then(match => {
+                    let players = match.players;
+                    for (let x = 0; x < players.length; x++) {
+                        if (players[x].username === username) {
+                            scores["k"] += players[x].kills;
+                            scores["d"] += players[x].deaths;
+                        }
                     }
-                }
-                }
+                });
             }
+        }
 
-            // Button - DOM
-             const button = "<button id='-prelkd' class='user-profile-view-all-button button button-new-style premium-color big thin prel-button' style='padding: 0 20px'><i class='fas fa-crosshairs xhair' style='margin-right: 10px'></i> Räkna ut K/D</button>";
-            const button_cont = `<div class="label"></div><span class="user-profile-rating" style="color: #ff8020;">${button}</span>`;
-            let button_wrap = document.createElement("div");
-            button_wrap.classList.add("section", "is-right", "prel-kd");
-            button_wrap.innerHTML = button_cont;
+        // Button - DOM
+        const button = "<button id='-prelkd' class='user-profile-view-all-button button button-new-style premium-color big thin prel-button' style='padding: 0 20px'><i class='fas fa-crosshairs xhair' style='margin-right: 10px'></i> Räkna ut K/D</button>";
+        const button_cont = `<div class="label"></div><span class="user-profile-rating" style="color: #ff8020;">${button}</span>`;
+        let button_wrap = document.createElement("div");
+        button_wrap.classList.add("section", "is-right", "prel-kd");
+        button_wrap.innerHTML = button_cont;
 
-            button_holder = document.querySelector(".user-profile-rank-rating");
-            button_holder.appendChild(button_wrap);
+        button_holder = document.querySelector(".user-profile-rank-rating");
+        button_holder.appendChild(button_wrap);
 
-            // Handle Event
-             let isPressed = false;
-            document.getElementById("-prelkd").addEventListener("click", function() {
+        // Handle Event
+        let isPressed = false;
+        document.getElementById("-prelkd").addEventListener("click", function() {
             if (isPressed != true) {
                 // Add animations
                 let button = document.querySelector(".prel-button");
                 button.innerHTML = "<i class='fas fa-circle-notch fa-spin' style='margin-right: 10px'></i> Räknar ut K/D";
-                getUserID(username).then(id => {
+                getUser(username).then(user => {
+                    const id = user.id;
                     getMatches(id).then(matches => {
                         getIndividualMatches(bundleMatches).then(res => {
                             avg = scores["k"] / scores["d"];
@@ -97,5 +90,5 @@ async function getKdButton() {
             }
             isPressed = true;
         });
-    }
+    //}
 }
