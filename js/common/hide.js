@@ -4,12 +4,6 @@ const settingsActions = {
     hideActivityProfile:   [".user-profile-activity-list", "single", null, "previous"]
 }
 
-/*function loadStorage(){
-    chrome.storage.sync.get(null, function(data) {
-        processSettings(data);
-    });
-}*/
-
 function processSettings(settings) {
     settings.buttons.forEach(function(set) {
         if (set.type == "hide") {

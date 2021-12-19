@@ -97,7 +97,7 @@ async function getMatches(element, userId, favMapElement) {
 }
 
 async function processLobby() {
-    // if (userStorage.settings.matchStats != false){
+    if (userStorage.settings.matchStats) {
         const users = [...document.getElementsByClassName("match-lobby-team-username")];
         let index = 0;
 
@@ -157,5 +157,5 @@ async function processLobby() {
             }
             index += 1;
         });
-    //}
+    }
 }

@@ -1,5 +1,5 @@
 async function getKdButton() {
-    //if (!userStorage.settings.profileKdButton) {
+    if (userStorage.settings.profileKdButton) {
         // Run logic
         const username = window.location.href.substring(window.location.href.lastIndexOf('/') + 1);
         let bundleMatches = [];
@@ -90,5 +90,5 @@ async function getKdButton() {
             }
             isPressed = true;
         });
-    //}
+    }
 }

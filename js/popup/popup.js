@@ -1,15 +1,15 @@
 const setHolder = document.querySelector(".set-holder");
 const feaHolder = document.querySelector(".fea-holder");
 const hidHolder = document.querySelector(".hid-holder");
-let buttons, settings;
+let settings;
 
 async function popupMain() {
-    await loadStorage();
+    settings = await loadStorage("settings");
     setupButtons();
     bindEventButtons();
 }
 
-function bindEventButtons(){
+function bindEventButtons() {
     // Bind all buttons to an eventlistener
     let buttons = document.querySelectorAll("button");
     buttons.forEach(function(b) {
@@ -19,31 +19,25 @@ function bindEventButtons(){
 
 function toggleSetting() {
     // Set new boolean and classname of the button
-    state = (this.classList[0] == "true") ? false : true;
+    state = this.classList[0] == "true";
     action = this.value;
-    settings[action] = state;
-    chrome.storage.sync.set({settings});
+    settings.settings[action] = state;
+    chrome.storage.sync.set({"settings": settings});
     this.className = state;
 }
 
-async function loadStorage() {
-    // Load and set storage
-    let status = false
-    await new Promise(resolve => {
-        chrome.storage.sync.get(null, async res => {
-            buttons = res.buttons;
-            settings = res.settings;
-            status = true;
-            resolve();
+const loadStorage = async (key) => {
+    return new Promise((resolve) => {
+        chrome.storage.local.get(key, (result) => {
+            resolve(result[key]);
         });
     });
-    return status;
 }
 
 function setupButtons() {
     // Setup UI and eventlisteners
-    buttons.forEach(function(button) {
-        element = `<button class="${settings[button.setting]}" value="${button.setting}">${button.text}</button>`;
+    settings.buttons.forEach(function(button) {
+        element = `<button class="${settings.settings[button.setting]}" value="${button.setting}">${button.text}</button>`;
         if (button.type == "setting") {
             setHolder.innerHTML += element;
         } else if (button.type == "feature") {

@@ -1,7 +1,6 @@
 
 async function playerStats(data) {
-    //if (!userStorage.settings.matchStats) {
-        // smallIconSetting = userStorage.settings.smallCardsProfile;:
+    if (userStorage.settings.matchStats) {
         const summary = document.getElementsByClassName("user-profile-summary")[0];
 
         let header = document.createElement("div");
@@ -39,17 +38,17 @@ async function playerStats(data) {
             value.appendChild(tipsy);
             value.appendChild(label);
 
-            /*if (!smallIconSetting) {
+            if (userStorage.settings.smallCardsProfile) {
                 let icon = document.createElement("div");
                 icon.className = "user-profile-stats-box-icon " + icons[i];
                 box.appendChild(icon);
-            }*/
+            }
             box.appendChild(value);
             boxes.appendChild(box);
         }
         stats.appendChild(boxes);
         summary.appendChild(stats);
-    //}
+    }
 }
 
 async function getStats() {

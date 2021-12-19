@@ -1,17 +1,6 @@
 // Constants
 const TIMEOUT = 100; // ms
 
-// Globals
-let userStorage;
-
-function loadStorage() {
-    chrome.storage.sync.get(null, function(data) {
-        userStorage = data
-    });
-}
-
-loadStorage();
-
 function pageLoaded(callback) {
     let trigger = setInterval(function() {
         let loadIndex = 0;
@@ -58,7 +47,7 @@ function prolongedPageLoad(elem, type, callback) {
 
 function processProfile() {
     pageLoaded(function(status) {
-        // hideMain();
+        hideMain();
         getKdButton();
         getStats();
     });
@@ -104,7 +93,7 @@ pageLoaded(function(status) {
         }
         // Run Globally
         pageLoaded(function(status){
-            // hideLivestreams();
+            hideLivestreams();
         });
     }
 });
@@ -122,7 +111,7 @@ chrome.runtime.onMessage.addListener(
                         matchHistoryPageListener();
                     }
                     // Run Globally
-                    // hideLivestreams();
+                    hideLivestreams();
                 }
             });
         } else if (request.message === 'profilePage') {
