@@ -60,7 +60,6 @@ function processProfile() {
     pageLoaded(function(status) {
         // hideMain();
         getKdButton();
-        // getFaceitRank();
         getStats();
     });
     // Run when match-table has loaded
@@ -105,7 +104,7 @@ pageLoaded(function(status) {
         }
         // Run Globally
         pageLoaded(function(status){
-            //hideLivestreams();
+            // hideLivestreams();
         });
     }
 });
@@ -123,11 +122,13 @@ chrome.runtime.onMessage.addListener(
                         matchHistoryPageListener();
                     }
                     // Run Globally
-                    //hideLivestreams();
+                    // hideLivestreams();
                 }
             });
         } else if (request.message === 'profilePage') {
-            setFaceitLevel(request.data);
+            if (request.data && request.data.payload && request.data.payload.players) {
+                setFaceitLevel(request.data.payload.players.results);
+            }
         }
     }
 );

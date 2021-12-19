@@ -87,7 +87,6 @@ async function getMatches(element, userId, favMapElement) {
                     mapIndex++;
                 }
             });
-            /* --------- */
             mapElement = `<div style="width:44px;height:27px;border-radius:5px;background-size:cover;margin: 0 auto" class="match-lobby-info-map map${usersTopMaps[mapIndex - 1]["mapid"]}"></div>`
             element.innerHTML = value
             favMapElement.innerHTML = mapElement
@@ -98,7 +97,7 @@ async function getMatches(element, userId, favMapElement) {
 }
 
 async function processLobby() {
-    //if (userStorage.settings.matchStats != false){
+    // if (userStorage.settings.matchStats != false){
         const users = [...document.getElementsByClassName("match-lobby-team-username")];
         let index = 0;
 
