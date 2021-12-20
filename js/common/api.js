@@ -8,7 +8,7 @@ const getStorage = async (key) => {
 
 const setStorage = async (store, value) => {
     await chrome.storage.local.set({ store: value }, () => {
-        console.log("Hej");
+        console.log("Storage updated");
     });
 }
 

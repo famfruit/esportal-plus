@@ -22,5 +22,6 @@ function processSettings(settings) {
 }
 
 function hideMain() {
-  processSettings(userStorage);
+    // Disabled for now, fix method
+    // processSettings(userStorage);
 }

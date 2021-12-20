@@ -7,7 +7,7 @@ body {
   color: white;
 }
 
-#appv {
+#app-version {
   position: absolute;
   right: 10px;
   font-size: 11px;

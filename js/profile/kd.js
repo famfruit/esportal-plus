@@ -1,5 +1,5 @@
 async function getKdButton() {
-    if (userStorage.settings.profileKdButton) {
+    if (userStorage.profileKDButton === "true") {
         // Run logic
         const username = window.location.href.substring(window.location.href.lastIndexOf('/') + 1);
         let bundleMatches = [];

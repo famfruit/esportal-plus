@@ -1,6 +1,6 @@
 
 async function playerStats(data) {
-    if (userStorage.settings.matchStats) {
+    if (userStorage.profileStats === "true") {
         const summary = document.getElementsByClassName("user-profile-summary")[0];
 
         let header = document.createElement("div");
@@ -38,7 +38,7 @@ async function playerStats(data) {
             value.appendChild(tipsy);
             value.appendChild(label);
 
-            if (userStorage.settings.smallCardsProfile) {
+            if (userStorage.smallCardsProfile === "true") {
                 let icon = document.createElement("div");
                 icon.className = "user-profile-stats-box-icon " + icons[i];
                 box.appendChild(icon);

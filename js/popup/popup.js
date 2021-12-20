@@ -1,55 +1,42 @@
-const setHolder = document.querySelector(".set-holder");
-const feaHolder = document.querySelector(".fea-holder");
-const hidHolder = document.querySelector(".hid-holder");
-let settings;
-
-async function popupMain() {
-    settings = await loadStorage("settings");
-    setupButtons();
-    bindEventButtons();
-}
-
-function bindEventButtons() {
-    // Bind all buttons to an eventlistener
-    let buttons = document.querySelectorAll("button");
-    buttons.forEach(function(b) {
-        b.addEventListener("click", toggleSetting);
-    });
-}
-
 function toggleSetting() {
-    // Set new boolean and classname of the button
-    state = this.classList[0] == "true" ? "false" : "true";
-    action = this.value;
-    settings.settings[action] = state;
-    chrome.storage.sync.set({"settings": settings});
-    this.className = state;
-}
+    this.value = this.value === "true" ? "false" : "true";
+    this.className = this.className == "setting true" ? "setting false" : "setting true";
 
-const loadStorage = async (key) => {
-    return new Promise((resolve) => {
-        chrome.storage.local.get(key, (result) => {
-            resolve(result[key]);
-        });
+    let settings = {};
+    let settingButtons = document.getElementsByClassName('setting');
+    for (let i = 0; i < settingButtons.length; i++) {
+        settings[settingButtons[i].id] = settingButtons[i].value;
+    }
+    console.log(settings);
+    chrome.storage.sync.set({'settings' : settings}, function() {
+        console.log('Settings was saved');
     });
 }
 
-function setupButtons() {
-    // Setup UI and eventlisteners
-    settings.buttons.forEach(function(button) {
-        element = `<button class="${settings.settings[button.setting]}" value="${button.setting}">${button.text}</button>`;
-        if (button.type == "setting") {
-            setHolder.innerHTML += element;
-        } else if (button.type == "feature") {
-            feaHolder.innerHTML += element;
-        } else {
-            hidHolder.innerHTML += element;
+function bindSettingButtons() {
+    let settingButtons = document.getElementsByClassName('setting');
+    for (let i = 0; i < settingButtons.length; i++) {
+        settingButtons[i].addEventListener('click', toggleSetting);
+        settingButtons[i].value = "true";
+        settingButtons[i].className = 'setting true';
+    }
+}
+
+function restoreSettings() {
+    bindSettingButtons();
+
+    chrome.storage.sync.get(['settings'], function(result) {
+        const data = result['settings'];
+        if (data) {
+            for (let key of Object.keys(data)) {
+                let button = document.getElementById(key);
+                button.value = (data[key] === '') ? "true" : data[key];
+                button.className = data[key] === "true" ? 'setting true' : 'setting false';
+            }
         }
     });
+
+    document.getElementById("app-version").innerText = `v${chrome.app.getDetails().version}`;
 }
 
-// Run Main
-popupMain();
-
-// Set manifest version to popup
-document.getElementById("appv").innerText = `v${chrome.app.getDetails().version}`;
+document.addEventListener('DOMContentLoaded', restoreSettings);

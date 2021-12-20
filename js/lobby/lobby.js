@@ -97,7 +97,7 @@ async function getMatches(element, userId, favMapElement) {
 }
 
 async function processLobby() {
-    if (userStorage.settings.matchStats) {
+    if (userStorage.matchStats === "true") {
         const users = [...document.getElementsByClassName("match-lobby-team-username")];
         let index = 0;
 
@@ -144,8 +144,8 @@ async function processLobby() {
             let headerItemMap = user.parentElement.parentElement.parentElement.parentElement.getElementsByTagName("thead")[0].children[0].children[4];
 
             if (element.length > 0) {
-                getUser(username).then(user => {
-                    getMatches(element[0].innerHTML, user.id, tableItemMap);
+                getUser(element[0].innerText).then(user => {
+                    getMatches(tableItem, user.id, tableItemMap);
                 });
             }
 
