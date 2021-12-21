@@ -39,6 +39,7 @@ async function getKdButton() {
         const button = "<button id='-prelkd' class='user-profile-view-all-button button button-new-style premium-color big thin prel-button' style='padding: 0 20px'><i class='fas fa-crosshairs xhair' style='margin-right: 10px'></i> Räkna ut K/D</button>";
         const button_cont = `<div class="label"></div><span class="user-profile-rating" style="color: #ff8020;">${button}</span>`;
         let button_wrap = document.createElement("div");
+        button_wrap.id = "esportal-plus-kd-button";
         button_wrap.classList.add("section", "is-right", "prel-kd");
         button_wrap.innerHTML = button_cont;
 
@@ -90,5 +91,12 @@ async function getKdButton() {
             }
             isPressed = true;
         });
+    }
+}
+
+function clearKdButton() {
+    let kdButton = document.getElementById("esportal-plus-kd-button");
+    if (kdButton) {
+        kdButton.remove();
     }
 }

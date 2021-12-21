@@ -17,6 +17,9 @@ function pageLoaded(callback) {
             loadIndex = 3;
         }
         if (contentWrapper && contentWrapper.classList.contains("inner-wrapper") && loadIndex === 3) {
+            loadIndex = 4;
+        }
+        if (userStorage !== undefined && loadIndex === 4) {
             clearInterval(trigger);
             callback(true);
         }

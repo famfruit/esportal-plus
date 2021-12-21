@@ -4,24 +4,50 @@ const settingsActions = {
     hideActivityProfile:   [".user-profile-activity-list", "single", null, "previous"]
 }
 
-function processSettings(settings) {
-    settings.buttons.forEach(function(set) {
-        if (set.type == "hide") {
-            handle = settings.settings[set.setting];
-            if (handle) {
-                action = set.setting;
-                query = (settingsActions[action][1] == "single") ? document.querySelector(settingsActions[action][0]) : document.querySelectorAll(settingsActions[action][0])[settingsActions[action][2]];
-                querySibling = (settingsActions[action][3] == "previous") ? query.previousElementSibling : "";
-                query.remove();
-                if (settingsActions[action][3] == "previous") {
-                    querySibling.remove();
-                }
-            }
+function processSettings() {
+    let hideActivityProfileDisplay = "block";
+    if (userStorage.hideActivityProfile === "true") {
+        hideActivityProfileDisplay = "none";
+    }
+    let settings = settingsActions.hideActivityProfile;
+    query = (settings[1] === "single") ? document.querySelector(settings[0]) : document.querySelectorAll(settings[0])[settings[2]];
+    if (query != null) {
+        querySibling = (settings[3] === "previous") ? query.previousElementSibling : "";
+        query.style.display = hideActivityProfileDisplay;
+        if (settings[3] === "previous") {
+            querySibling.style.display = hideActivityProfileDisplay;
         }
-    });
+    }
+
+    let hideMissionsProfileDisplay = "block";
+    if (userStorage.hideMissionsProfile === "true") {
+        hideMissionsProfileDisplay = "none";
+    }
+    settings = settingsActions.hideMissionsProfile;
+    query = (settings[1] === "single") ? document.querySelector(settings[0]) : document.querySelectorAll(settings[0])[settings[2]];
+    if (query != null) {
+        querySibling = (settings[3] === "previous") ? query.previousElementSibling : "";
+        query.style.display = hideMissionsProfileDisplay;
+        if (settings[3] === "previous") {
+            querySibling.style.display = hideMissionsProfileDisplay;
+        }
+    }
+
+    let hideMedalsProfileDisplay = "block";
+    if (userStorage.hideMedalsProfile === "true") {
+        hideMedalsProfileDisplay = "none";
+    }
+    settings = settingsActions.hideMedalsProfile;
+    query = (settings[1] === "single") ? document.querySelector(settings[0]) : document.querySelectorAll(settings[0])[settings[2]];
+    if (query != null) {
+        querySibling = (settings[3] === "previous") ? query.previousElementSibling : "";
+        query.style.display = hideMedalsProfileDisplay;
+        if (settings[3] === "previous") {
+            querySibling.style.display = hideMedalsProfileDisplay;
+        }
+    }
 }
 
 function hideMain() {
-    // Disabled for now, fix method
-    // processSettings(userStorage);
+    processSettings();
 }

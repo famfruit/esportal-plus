@@ -6,12 +6,14 @@ async function playerStats(data) {
         let header = document.createElement("div");
         header.className = "user-profile-heading";
         header.style.cssText = "margin-top: 15px;margin-bottom: 15px;"
+        header.id = "esportal-plus-profile-stats-header";
         let headerValue = document.createTextNode("Latest 5 games");
         header.appendChild(headerValue);
 
         summary.appendChild(header);
 
         let stats = document.createElement("div");
+        stats.id = "esportal-plus-profile-stats";
         let boxes = document.createElement("div");
         boxes.className = "user-profile-stats-boxes";
         boxes.style.cssText = "margin-top: 15px;"
@@ -48,6 +50,17 @@ async function playerStats(data) {
         }
         stats.appendChild(boxes);
         summary.appendChild(stats);
+    }
+}
+
+function clearStats() {
+    let statsHeader = document.getElementById("esportal-plus-profile-stats-header");
+    let stats = document.getElementById("esportal-plus-profile-stats");
+    if (statsHeader) {
+        statsHeader.remove();
+    }
+    if (stats) {
+        stats.remove();
     }
 }
 

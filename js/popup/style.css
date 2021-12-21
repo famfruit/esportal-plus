@@ -92,7 +92,7 @@ button.true {
   min-height: 30px;
   border: 2px solid rgb(63 65 81 / 0%);
   color: #fff;
-  background: linear-gradient(90deg,#13aceb,#007ce9);
+  /*background: linear-gradient(90deg,#13aceb,#007ce9);*/
   border-radius: 4px;
   font-size: 12px;
   font-weight: 600;

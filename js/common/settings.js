@@ -37,7 +37,18 @@ window.addEventListener('load', () => {
     chrome.storage.onChanged.addListener((changes, area) => {
         if (area === 'sync' && changes.settings?.newValue) {
             userStorage = changes.settings?.newValue;
-            // TODO: Automatically update here, if needed
+            const href = window.location.href;
+            if ((href.includes("match") && !href.includes("matchmaking")) || href.includes("gather")) {
+                processLobby();
+            } else if (href.includes("profile")) {
+                clearStats();
+                clearKdButton();
+                hideMain();
+                getKdButton();
+                getStats();
+                // processProfile();
+                // matchHistoryPageListener();
+            }
         }
     });
 });
