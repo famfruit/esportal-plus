@@ -38,7 +38,7 @@ async function playerStats(data) {
             value.appendChild(tipsy);
             value.appendChild(label);
 
-            if (userStorage.smallCardsProfile === "true") {
+            if (userStorage.smallCardsProfile === "false") {
                 let icon = document.createElement("div");
                 icon.className = "user-profile-stats-box-icon " + icons[i];
                 box.appendChild(icon);
