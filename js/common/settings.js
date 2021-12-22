@@ -31,21 +31,40 @@ const fetchSettings = async () => {
     }
 }
 
+function getUpdatedSetting(updatedSettings) {
+    for (let setting of Object.keys(updatedSettings)) {
+        if (updatedSettings[setting] != userStorage[setting]) {
+            return setting;
+        }
+    }
+}
+
 window.addEventListener('load', () => {
     fetchSettings();
 
     chrome.storage.onChanged.addListener((changes, area) => {
         if (area === 'sync' && changes.settings?.newValue) {
+            let updatedSetting = getUpdatedSetting(changes.settings?.newValue);
             userStorage = changes.settings?.newValue;
             const href = window.location.href;
             if ((href.includes("match") && !href.includes("matchmaking")) || href.includes("gather")) {
                 processLobby();
             } else if (href.includes("profile")) {
-                clearStats();
-                clearKdButton();
-                hideMain();
-                getKdButton();
-                getStats();
+                if (updatedSetting === "profileStats") {
+                    clearStats();
+                    getStats();
+                } else if (updatedSetting === "profileKDButton") {
+                    clearKdButton();
+                    getKdButton();
+                } else if (updatedSetting === "hideMedalsProfile" || updatedSetting === "hideMissionsProfile" || updatedSetting === "hideActivityProfile") {
+                    hideMain();
+                } else if (updatedSetting === "faceitLevels") {
+                    enableFaceitLevel(userStorage.faceitLevels === "true");
+                } else if (updatedSetting === "matchStats") {
+
+                } else if (updatedSetting === "historyStats") {
+
+                }
                 // processProfile();
                 // matchHistoryPageListener();
             }
