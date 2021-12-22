@@ -5,45 +5,24 @@ const settingsActions = {
 }
 
 function processSettings() {
-    let hideActivityProfileDisplay = "block";
-    if (userStorage.hideActivityProfile === "true") {
-        hideActivityProfileDisplay = "none";
-    }
-    let settings = settingsActions.hideActivityProfile;
-    query = (settings[1] === "single") ? document.querySelector(settings[0]) : document.querySelectorAll(settings[0])[settings[2]];
-    if (query != null) {
-        querySibling = (settings[3] === "previous") ? query.previousElementSibling : "";
-        query.style.display = hideActivityProfileDisplay;
-        if (settings[3] === "previous") {
-            querySibling.style.display = hideActivityProfileDisplay;
+    for([name, value] of Object.entries(settingsActions)){
+        // Loop through settingsActions and set settings according to userStorage
+        let settings = settingsActions[name]
+        let hideValue = "block";
+        if (userStorage[name] === "true"){
+          // Toggles visibility
+          hideValue = "none";
         }
-    }
-
-    let hideMissionsProfileDisplay = "block";
-    if (userStorage.hideMissionsProfile === "true") {
-        hideMissionsProfileDisplay = "none";
-    }
-    settings = settingsActions.hideMissionsProfile;
-    query = (settings[1] === "single") ? document.querySelector(settings[0]) : document.querySelectorAll(settings[0])[settings[2]];
-    if (query != null) {
-        querySibling = (settings[3] === "previous") ? query.previousElementSibling : "";
-        query.style.display = hideMissionsProfileDisplay;
-        if (settings[3] === "previous") {
-            querySibling.style.display = hideMissionsProfileDisplay;
-        }
-    }
-
-    let hideMedalsProfileDisplay = "block";
-    if (userStorage.hideMedalsProfile === "true") {
-        hideMedalsProfileDisplay = "none";
-    }
-    settings = settingsActions.hideMedalsProfile;
-    query = (settings[1] === "single") ? document.querySelector(settings[0]) : document.querySelectorAll(settings[0])[settings[2]];
-    if (query != null) {
-        querySibling = (settings[3] === "previous") ? query.previousElementSibling : "";
-        query.style.display = hideMedalsProfileDisplay;
-        if (settings[3] === "previous") {
-            querySibling.style.display = hideMedalsProfileDisplay;
+        // Determines what element(s) should be hidden or shown
+        query = (settings[1] === "single") ? document.querySelector(settings[0]) : document.querySelectorAll(settings[0])[settings[2]];
+        if (query != null) {
+            querySibling = (settings[3] === "previous") ? query.previousElementSibling : "";
+            query.style.display = hideValue;
+            // If parent has generic class name
+            // find the child and then backtrack to the parent and hide/display that one instead
+            if (settings[3] === "previous") {
+                querySibling.style.display = hideValue;
+            }
         }
     }
 }
