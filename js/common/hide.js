@@ -10,8 +10,8 @@ function processSettings() {
         let settings = settingsActions[name];
         let hideValue = "block";
         if (userStorage[name] === "true"){
-          // Toggles visibility
-          hideValue = "none";
+            // Toggles visibility
+            hideValue = "none";
         }
         // Determines what element(s) should be hidden or shown
         query = (settings[1] === "single") ? document.querySelector(settings[0]) : document.querySelectorAll(settings[0])[settings[2]];
@@ -29,13 +29,13 @@ function processSettings() {
 function clearAds(){
   // Remove ads and nonsense that disrupts the user experience
   // - "top-bar-matchmaking" is often used for ads in the header-navigation bar
+  // - Runs Globally
   const headerMatchString = "top-bar-matchmaking";
   let headerElements = document.querySelectorAll(`[class*=${headerMatchString}]`);
   headerElements.forEach(function (element){
-    element.style.display = "none";
+      element.style.display = "none";
   })
 }
 function hideMain() {
     processSettings();
-    clearAds();
 }

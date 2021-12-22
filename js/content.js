@@ -1,5 +1,5 @@
 // Constants
-const TIMEOUT = 100; // ms
+const TIMEOUT = 50; // ms
 
 function pageLoaded(callback) {
     let trigger = setInterval(function() {
@@ -96,6 +96,7 @@ pageLoaded(function(status) {
         }
         // Run Globally
         pageLoaded(function(status){
+            clearAds();
             hideLivestreams();
         });
     }
@@ -114,6 +115,7 @@ chrome.runtime.onMessage.addListener(
                         matchHistoryPageListener();
                     }
                     // Run Globally
+                    clearAds();
                     hideLivestreams();
                 }
             });
