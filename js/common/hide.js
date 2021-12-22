@@ -7,7 +7,7 @@ const settingsActions = {
 function processSettings() {
     for([name, value] of Object.entries(settingsActions)){
         // Loop through settingsActions and set settings according to userStorage
-        let settings = settingsActions[name]
+        let settings = settingsActions[name];
         let hideValue = "block";
         if (userStorage[name] === "true"){
           // Toggles visibility
@@ -26,7 +26,16 @@ function processSettings() {
         }
     }
 }
-
+function clearAds(){
+  // Remove ads and nonsense that disrupts the user experience
+  // - "top-bar-matchmaking" is often used for ads in the header-navigation bar
+  const headerMatchString = "top-bar-matchmaking";
+  let headerElements = document.querySelectorAll(`[class*=${headerMatchString}]`);
+  headerElements.forEach(function (element){
+    element.style.display = "none";
+  })
+}
 function hideMain() {
     processSettings();
+    clearAds();
 }
