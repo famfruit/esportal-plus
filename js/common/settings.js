@@ -48,7 +48,9 @@ window.addEventListener('load', () => {
             userStorage = changes.settings?.newValue;
             const href = window.location.href;
             if ((href.includes("match") && !href.includes("matchmaking")) || href.includes("gather")) {
-                processLobby();
+                if (updatedSetting === "matchStats") {
+                    processLobby();
+                }
             } else if (href.includes("profile")) {
                 if (updatedSetting === "profileStats") {
                     clearStats();
@@ -60,13 +62,9 @@ window.addEventListener('load', () => {
                     hideMain();
                 } else if (updatedSetting === "faceitLevels") {
                     enableFaceitLevel(userStorage.faceitLevels === "true");
-                } else if (updatedSetting === "matchStats") {
-
                 } else if (updatedSetting === "historyStats") {
-
+                    enableHistory(userStorage.historyStats === "true");
                 }
-                // processProfile();
-                // matchHistoryPageListener();
             }
         }
     });

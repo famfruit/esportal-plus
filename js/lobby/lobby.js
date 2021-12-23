@@ -87,9 +87,9 @@ async function getMatches(element, userId, favMapElement) {
                     mapIndex++;
                 }
             });
-            mapElement = `<div style="width:44px;height:27px;border-radius:5px;background-size:cover;margin: 0 auto" class="match-lobby-info-map map${usersTopMaps[mapIndex - 1]["mapid"]}"></div>`
-            element.innerHTML = value
-            favMapElement.innerHTML = mapElement
+            mapElement = `<div style="width:44px;height:27px;border-radius:5px;background-size:cover;margin: 0 auto;" class="match-lobby-info-map map${usersTopMaps[mapIndex - 1]["mapid"]}"></div>`;
+            element.innerHTML = value;
+            favMapElement.innerHTML = mapElement;
         }
     } catch (error) {
         console.error(error);
