@@ -27,6 +27,7 @@
       "/js/common/hide.js",
       "/js/common/livestream.js",
       "/js/lobby/lobby.js",
+      "/js/lobby/autocommend.js",
       "/js/profile/kd.js",
       "/js/profile/profile.js",
       "/js/profile/history.js"

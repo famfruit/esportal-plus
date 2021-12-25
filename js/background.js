@@ -1,5 +1,4 @@
-async function getUser(url) {
-    const username = url.substring(url.lastIndexOf('/') + 1);
+async function getUser(username) {
     try {
         const response = await fetch(`https://api.esportal.com/user_profile/get?username=${username}`);
         const user = await response.json();
@@ -12,7 +11,8 @@ async function getUser(url) {
 const toSteamID = accountid => "76561" + (accountid + 197960265728 + "");
 
 async function getEsportalId(url) {
-    let result = await getUser(url);
+    const username = url.substring(url.lastIndexOf('/') + 1);
+    let result = await getUser(username);
     console.log(result);
     return toSteamID(result.id);
 }
@@ -26,6 +26,29 @@ async function sendFaceitLevel(tabId, url) {
         data: result
     });
 }
+
+/*async function getFaceitLevels(usernames) {
+    let faceitLevels = [];
+    for (let username in usernames) {
+        getUser(usernames[username]).then(user => {
+            let steamId = toSteamID(user.id);
+            fetch(`https://api.faceit.com/search/v1?limit=1&query=${steamId}`).then(response => {
+                response.json().then(result => {
+                    let data = result.payload.players.results;
+                    let games = "";
+                    if (data.length != 0 && data[0].games.length != 0) {
+                        games = data[0].games[0];
+                    }
+                    if (games.name == "csgo") {
+                        faceitLevels.push({"level": games.skill_level, "nickname": data[0].nickname});
+                    }
+                });
+            });
+        });
+    }
+    console.log(faceitLevels);
+    return faceitLevels;
+}*/
 
 chrome.tabs.onUpdated.addListener(
     function(tabId, changeInfo, tab) {
@@ -48,3 +71,15 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
         }
     });
 });
+
+/*chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+        console.log(request.message);
+        console.log(request.users);
+        if (request.message == "faceitLevels") {
+            getFaceitLevels(request.users).then(faceitData => {
+                sendResponse({data: faceitData});
+            });
+        }
+    }
+);*/

@@ -43,58 +43,66 @@ async function getMatches(element, userId, favMapElement) {
     try {
         const result = await this.fetch(url);
         const games = await result.json();
-        for (const game of games) {
-            const matchId = game.id;
-            const matchData = await getMatch(matchId);
-            if (matchData != null && matchData.players != null) {
-                matchData.players.forEach(player => {
-                    if (userId === player.id && numberOfGames < 5) {
-                        kills += player.kills;
-                        deaths += player.deaths;
-                        numberOfGames += 1;
-                        if (!topMatchList["id"]) {
-                            let playerMapData = testFunction(currentTime, player.id).then((value) => {
-                            value[0].forEach(map => {
-                                avgMapsPlayed.push(map["total"]);
-                            });
-                            topMatchList["map"] = value[0];
-                          });
-                          topMatchList["id"] = player.id;
+        if (games) {
+            for (const game of games) {
+                const matchId = game.id;
+                const matchData = await getMatch(matchId);
+                if (matchData != null && matchData.players != null) {
+                    matchData.players.forEach(player => {
+                        if (userId === player.id && numberOfGames < 5) {
+                            kills += player.kills;
+                            deaths += player.deaths;
+                            numberOfGames += 1;
+                            if (!topMatchList["id"]) {
+                                testFunction(currentTime, player.id).then((value) => {
+                                    value[0].forEach(map => {
+                                        avgMapsPlayed.push(map["total"]);
+                                    });
+                                    topMatchList["map"] = value[0];
+                                });
+                                topMatchList["id"] = player.id;
+                            }
+                            if (player.elo_change > 0) {
+                                matchList.push("<span style='color: green;'>W</span>");
+                            } else {
+                                matchList.push("<span style='color: red;'>L</span>");
+                            }
                         }
-                        if (player.elo_change > 0) {
-                            matchList.push("<span style='color: green;'>W</span>");
-                        } else {
-                            matchList.push("<span style='color: red;'>L</span>");
-                        }
-                    }
-                });
-            }
-        }
-        let value = "-";
-        if (numberOfGames === 5) {
-            value = `${matchList.join(" ")} (${Math.round((kills / deaths) * 100) / 100})`;
-        }
-        if (element !== undefined) {
-            mapIndex = 0;
-            usersTopMaps = {};
-            avgMapsPlayed = eval(avgMapsPlayed.join('+'))/avgMapsPlayed.length;
-            topMatchList["avg"] = avgMapsPlayed;
-            topMatchList["map"].forEach(map => {
-                mapGamesPlayed = map.wins + map.losses;
-                if (mapGamesPlayed >= topMatchList["avg"]) {
-                    userAvgMap = map.wins / map.losses;
-                    usersTopMaps[mapIndex] = {"mapid": map.id, "wins": map.wins, "losses": map.losses, "avg": userAvgMap};
-                    mapIndex++;
+                    });
                 }
-            });
-            mapElement = `<div style="width:44px;height:27px;border-radius:5px;background-size:cover;margin: 0 auto;" class="match-lobby-info-map map${usersTopMaps[mapIndex - 1]["mapid"]}"></div>`;
-            element.innerHTML = value;
-            favMapElement.innerHTML = mapElement;
+            }
+
+            let value = "-";
+            if (numberOfGames === 5) {
+                value = `${matchList.join(" ")} (${(Math.round((kills / deaths) * 100) / 100).toFixed(2)})`;
+            }
+            if (element !== undefined) {
+                /*mapIndex = 0;
+                usersTopMaps = {};
+                topMatchList["avg"] = eval(avgMapsPlayed.join('+'))/avgMapsPlayed.length;
+                topMatchList["map"].forEach(map => {
+                    mapGamesPlayed = map.wins + map.losses;
+                    if (mapGamesPlayed >= topMatchList["avg"]) {
+                        userAvgMap = map.wins / map.losses;
+                        usersTopMaps[mapIndex] = {"mapid": map.id, "wins": map.wins, "losses": map.losses, "avg": userAvgMap};
+                        mapIndex++;
+                    }
+                });*/
+                //mapElement = `<div style="width:44px;height:27px;border-radius:5px;background-size:cover;margin: 0 auto;" class="match-lobby-info-map map${usersTopMaps[mapIndex - 1]["mapid"]}"></div>`;
+                element.innerHTML = value;
+                //favMapElement.innerHTML = mapElement;
+            }
         }
     } catch (error) {
         console.error(error);
     }
 }
+
+/*async function sendFaceitLevelsRequest(userList) {
+    chrome.runtime.sendMessage({message: "faceitLevels", users: userList}, function(response) {
+        console.log(response.data);
+    });
+}*/
 
 async function processLobby() {
     if (userStorage.matchStats === "true") {
@@ -117,6 +125,15 @@ async function processLobby() {
             tableFixFlag = true;
         }
         /* End Tablefix Header */
+
+        // List of usernames
+        /*let userList = [];
+        users.forEach(userElement => {
+            const element = userElement.getElementsByTagName("span");
+            userList.push(element[0].innerText);
+        });
+
+        sendFaceitLevelsRequest(userList);*/
 
         users.forEach(user => {
             const element = user.getElementsByTagName("span");
