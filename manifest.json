@@ -28,6 +28,7 @@
       "/js/common/livestream.js",
       "/js/lobby/lobby.js",
       "/js/lobby/autocommend.js",
+      "/js/lobby/autoaccept.js",
       "/js/profile/kd.js",
       "/js/profile/profile.js",
       "/js/profile/history.js"
