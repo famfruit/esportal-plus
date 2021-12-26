@@ -27,28 +27,30 @@ async function sendFaceitLevel(tabId, url) {
     });
 }
 
-/*async function getFaceitLevels(usernames) {
-    let faceitLevels = [];
-    for (let username in usernames) {
-        getUser(usernames[username]).then(user => {
+async function getFaceitLevels(request) {
+    const usernames = request.users;
+    if (request.message == "faceitLevels") {
+        let faceitLevels = [];
+        for (let username in usernames) {
+            let user = await getUser(usernames[username]);
             let steamId = toSteamID(user.id);
-            fetch(`https://api.faceit.com/search/v1?limit=1&query=${steamId}`).then(response => {
-                response.json().then(result => {
-                    let data = result.payload.players.results;
-                    let games = "";
-                    if (data.length != 0 && data[0].games.length != 0) {
-                        games = data[0].games[0];
-                    }
-                    if (games.name == "csgo") {
-                        faceitLevels.push({"level": games.skill_level, "nickname": data[0].nickname});
-                    }
-                });
-            });
-        });
+            let response = await fetch(`https://api.faceit.com/search/v1?limit=1&query=${steamId}`);
+            let result = await response.json();
+            let data = result.payload.players.results;
+            let games = "";
+            if (data.length != 0 && data[0].games.length != 0) {
+                games = data[0].games[0];
+            }
+            if (games.name == "csgo") {
+                faceitLevels.push({"level": games.skill_level, "nickname": data[0].nickname});
+            } else {
+                faceitLevels.push({"level": 0, "nickname": ""});
+            }
+        }
+        return faceitLevels;
     }
-    console.log(faceitLevels);
-    return faceitLevels;
-}*/
+    return [];
+}
 
 chrome.tabs.onUpdated.addListener(
     function(tabId, changeInfo, tab) {
@@ -72,14 +74,16 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
     });
 });
 
-/*chrome.runtime.onMessage.addListener(
+/*
+async function testar(userlist) {
+    const d = await Promise.all(getFaceitLevels(userlist));
+    return d;
+}
+*/
+
+chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
-        console.log(request.message);
-        console.log(request.users);
-        if (request.message == "faceitLevels") {
-            getFaceitLevels(request.users).then(faceitData => {
-                sendResponse({data: faceitData});
-            });
-        }
+        getFaceitLevels(request).then(sendResponse);
+        return true;
     }
-);*/
+);

@@ -1,14 +1,14 @@
-function styleLobbyLevels(level) {
+function styleLobbyLevels(level, nickname) {
     const levelCols = {1: "#ededed", 2: "#1ce200", 3: "#1ce200", 4: "#fec700", 5: "#fec700", 6: "#fec700", 7: "#fec700", 8: "#ff6309", 9: "#ff6309", 10: "#f91e00"};
-    padd = (level[0] === 10) ? "2px 4px" : "2px 7px";
+    padd = (level === 10) ? "2px 4px" : "2px 7px";
     wrap = document.createElement("div");
     wrap.classList.add("Tipsy-inlineblock-wrapper");
 
     element = document.createElement("a");
-    element.href = `https://faceit.com/en/players/${level[1]}`;
+    element.href = `https://faceit.com/en/players/${nickname}`;
     element.target = "_BLANK";
-    element.style.cssText = `color: ${levelCols[level[0]]};margin-left:10px;border-radius:50%;padding:${padd};border:1px solid ${levelCols[level[0]]}`;
-    element.innerText = level[0];
+    element.style.cssText = `color: ${levelCols[level]};margin-left:10px;border-radius:50%;padding:${padd};border:1px solid ${levelCols[level]}`;
+    element.innerText = level;
     wrap.appendChild(element);
     return wrap;
 }
@@ -77,7 +77,7 @@ async function getMatches(element, userId, favMapElement) {
                 value = `${matchList.join(" ")} (${(Math.round((kills / deaths) * 100) / 100).toFixed(2)})`;
             }
             if (element !== undefined) {
-                /*mapIndex = 0;
+                mapIndex = 0;
                 usersTopMaps = {};
                 topMatchList["avg"] = eval(avgMapsPlayed.join('+'))/avgMapsPlayed.length;
                 topMatchList["map"].forEach(map => {
@@ -87,10 +87,10 @@ async function getMatches(element, userId, favMapElement) {
                         usersTopMaps[mapIndex] = {"mapid": map.id, "wins": map.wins, "losses": map.losses, "avg": userAvgMap};
                         mapIndex++;
                     }
-                });*/
-                //mapElement = `<div style="width:44px;height:27px;border-radius:5px;background-size:cover;margin: 0 auto;" class="match-lobby-info-map map${usersTopMaps[mapIndex - 1]["mapid"]}"></div>`;
+                });
+                mapElement = `<div style="width:44px;height:27px;border-radius:5px;background-size:cover;margin: 0 auto;" class="match-lobby-info-map map${usersTopMaps[mapIndex - 1]["mapid"]}"></div>`;
                 element.innerHTML = value;
-                //favMapElement.innerHTML = mapElement;
+                favMapElement.innerHTML = mapElement;
             }
         }
     } catch (error) {
@@ -98,11 +98,16 @@ async function getMatches(element, userId, favMapElement) {
     }
 }
 
-/*async function sendFaceitLevelsRequest(userList) {
+async function sendFaceitLevelsRequest(userList, users) {
     chrome.runtime.sendMessage({message: "faceitLevels", users: userList}, function(response) {
-        console.log(response.data);
+        for (let i = 0; i < users.length; i++) {
+            if (response[i].level !== 0) {
+                levelWrap = styleLobbyLevels(response[i].level, response[i].nickname);
+                users[i].parentElement.appendChild(levelWrap);
+            }
+        }
     });
-}*/
+}
 
 async function processLobby() {
     if (userStorage.matchStats === "true") {
@@ -127,25 +132,16 @@ async function processLobby() {
         /* End Tablefix Header */
 
         // List of usernames
-        /*let userList = [];
+        let userList = [];
         users.forEach(userElement => {
             const element = userElement.getElementsByTagName("span");
             userList.push(element[0].innerText);
         });
 
-        sendFaceitLevelsRequest(userList);*/
+        sendFaceitLevelsRequest(userList, users);
 
         users.forEach(user => {
             const element = user.getElementsByTagName("span");
-            /*let level = getFaceitLevel(element[0].innerText).then(level => {
-                if (level === undefined) {
-                    return;
-                }
-                if (level[0] > 0) {
-                    levelWrap = styleLobbyLevels(level);
-                    user.parentElement.appendChild(levelWrap);
-                }
-            });*/
 
             /* Tablefix - Columns */
             if(index > 4 && tableFixFlag) {
