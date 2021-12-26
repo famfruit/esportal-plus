@@ -66,13 +66,13 @@ async function getHistory(firstTime) {
     }
 }
 
-function enableHistory(enable) {
+function enableHistory() {
     let header = document.getElementById("esportal-plus-history-header");
     let bodies = document.getElementsByClassName("esportal-plus-history-body");
     let winLosses = document.getElementsByClassName("esportal-plus-win-loss");
     let tableDisplayProperty = "none";
     let displayProperty = "none";
-    if (enable) {
+    if (userStorage.historyStats === "true") {
         tableDisplayProperty = "table-cell";
         displayProperty = "inline-block";
     }

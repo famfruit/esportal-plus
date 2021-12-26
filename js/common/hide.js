@@ -4,38 +4,43 @@ const settingsActions = {
     hideActivityProfile:   [".user-profile-activity-list", "single", null, "previous"]
 }
 
-function processSettings() {
-    for([name, value] of Object.entries(settingsActions)){
-        // Loop through settingsActions and set settings according to userStorage
-        let settings = settingsActions[name];
+const processHideSettings = () => {
+    for([index, value] of Object.entries(settingsActions)){
+        // Iterate over settingsActions and set settings according to user storage
+        let hideSettings = settingsActions[index];
         let hideValue = "block";
-        if (userStorage[name] === "true"){
-            // Toggles visibility
+        if (userStorage[index] === "true"){
             hideValue = "none";
         }
-        // Determines what element(s) should be hidden or shown
-        query = (settings[1] === "single") ? document.querySelector(settings[0]) : document.querySelectorAll(settings[0])[settings[2]];
-        if (query != null) {
-            querySibling = (settings[3] === "previous") ? query.previousElementSibling : "";
+
+        // Determines what element(s) should be hidden
+        let query = (hideSettings[1] === "single") ? document.querySelector(hideSettings[0]) : document.querySelectorAll(hideSettings[0])[hideSettings[2]];
+        if (query) {
+            let querySibling = (hideSettings[3] === "previous") ? query.previousElementSibling : "";
             query.style.display = hideValue;
-            // If parent has generic class name
-            // find the child and then backtrack to the parent and hide/display that one instead
-            if (settings[3] === "previous") {
+            // If parent has generic class name,
+            // find the child and then backtrack to
+            // the parent and hide/display that one instead
+            if (hideSettings[3] === "previous") {
                 querySibling.style.display = hideValue;
             }
         }
     }
 }
-function clearAds(){
+
+const clearAds = () => {
   // Remove ads and nonsense that disrupts the user experience
   // - "top-bar-matchmaking" is often used for ads in the header-navigation bar
   // - Runs Globally
-  const headerMatchString = "top-bar-matchmaking";
-  let headerElements = document.querySelectorAll(`[class*=${headerMatchString}]`);
-  headerElements.forEach(function (element){
-      element.style.display = "none";
-  })
+  const headerClass = "top-bar-matchmaking";
+  let headerElements = document.querySelectorAll(`[class*=${headerClass}]`);
+  if (headerElements) {
+    headerElements.forEach(headerElement => {
+        headerElement.style.display = "none";
+    });
+  }
 }
-function hideMain() {
-    processSettings();
+
+const hideMain = () => {
+    processHideSettings();
 }

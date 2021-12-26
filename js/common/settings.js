@@ -1,17 +1,16 @@
-// Globals
 let userStorage;
 
 const defaultSettings = {
-    autoAccept: false,
-    autoCommend: false,
-    hideLiveStreams: false,
-    profileKDButton: true,
-    faceitLevels: true,
-    matchStats: true,
-    hideMedalsProfile: true,
-    hideMissionsProfile: true,
-    hideActivityProfile: true,
-    smallCardsProfile: true
+    autoAccept: "false",
+    autoCommend: "false",
+    hideLiveStreams: "false",
+    profileKDButton: "true",
+    faceitLevels: "true",
+    matchStats: "true",
+    hideMedalsProfile: "true",
+    hideMissionsProfile: "true",
+    hideActivityProfile: "true",
+    smallCardsProfile: "true"
 }
 
 const getSettingsStorage = async (key) => {
@@ -24,46 +23,72 @@ const getSettingsStorage = async (key) => {
 
 const fetchSettings = async () => {
     let settingsData = await getSettingsStorage("settings");
-    if (settingsData !== undefined) {
+    if (settingsData) {
         userStorage = settingsData;
     } else {
         userStorage = defaultSettings;
     }
 }
 
-function getUpdatedSetting(updatedSettings) {
-    for (let setting of Object.keys(updatedSettings)) {
-        if (updatedSettings[setting] != userStorage[setting]) {
+const getUpdatedSetting = (settings) => {
+    for (const setting of Object.keys(settings)) {
+        if (settings[setting] !== userStorage[setting]) {
             return setting;
         }
     }
 }
 
+const isMatchPage = (url) => {
+    return url.includes("match") && !url.includes("matchmaking") || url.includes("gather");
+}
+
+const isProfilePage = (url) => {
+    return url.includes("profile");
+}
+
 window.addEventListener('load', () => {
+    // Fetch settings for storage on page load
+    // Use default settings if no settings exist in storage
     fetchSettings();
 
     chrome.storage.onChanged.addListener((changes, area) => {
         if (area === 'sync' && changes.settings?.newValue) {
-            let updatedSetting = getUpdatedSetting(changes.settings?.newValue);
+            // Determine which setting was updated and update user storage
+            let setting = getUpdatedSetting(changes.settings?.newValue);
             userStorage = changes.settings?.newValue;
-            const href = window.location.href;
-            if ((href.includes("match") && !href.includes("matchmaking")) || href.includes("gather")) {
-                if (updatedSetting === "matchStats") {
+
+            // Update page based on updated setting
+            if (isMatchPage(window.location.href)) {
+                if (setting === "matchStats") {
+                    // TODO: Handle live toggle of match stats
                     processLobby();
                 }
-            } else if (href.includes("profile")) {
-                if (updatedSetting === "profileStats") {
-                    clearStats();
-                    getStats();
-                } else if (updatedSetting === "profileKDButton") {
-                    clearKdButton();
-                    getKdButton();
-                } else if (updatedSetting === "hideMedalsProfile" || updatedSetting === "hideMissionsProfile" || updatedSetting === "hideActivityProfile") {
-                    hideMain();
-                } else if (updatedSetting === "faceitLevels") {
-                    enableFaceitLevel(userStorage.faceitLevels === "true");
-                } else if (updatedSetting === "historyStats") {
-                    enableHistory(userStorage.historyStats === "true");
+            } else if (isProfilePage(window.location.href)) {
+                switch(setting) {
+                    case "profileStats":
+                        clearStats();
+                        getStats();
+                        break;
+                    case "profileKDButton":
+                        clearKdButton();
+                        getKdButton();
+                        break;
+                    case "faceitLevels":
+                        enableFaceitLevel();
+                        break;
+                    case "historyStats":
+                        enableHistory();
+                        break;
+                    case "hideMedalsProfile":
+                    case "hideMissionsProfile":
+                    case "hideActivityProfile":
+                        hideMain();
+                        break;
+                    case "hideLiveStreams":
+                        hideLivestreams();
+                        break;
+                    default:
+                        break;
                 }
             }
         }

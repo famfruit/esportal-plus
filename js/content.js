@@ -122,7 +122,8 @@ chrome.runtime.onMessage.addListener(
                 }
             });
         } else if (request.message === 'profilePage') {
-            if (request.data && request.data.payload && request.data.payload.players) {
+            if (request?.data?.payload?.players?.results) {
+                // Dont think this logic works for page reload
                 setFaceitLevel(request.data.payload.players.results);
             }
         }

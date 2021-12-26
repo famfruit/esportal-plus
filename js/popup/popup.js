@@ -7,7 +7,7 @@ function toggleSetting() {
     for (let i = 0; i < settingButtons.length; i++) {
         settings[settingButtons[i].id] = settingButtons[i].value;
     }
-    console.log(settings);
+
     chrome.storage.sync.set({'settings' : settings}, function() {
         console.log('Settings was saved');
     });
