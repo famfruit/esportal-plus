@@ -2,7 +2,6 @@ function autoAccept(){
   // Interval, look for DIV - if exist, start a new interval to look for it being open
   if (userStorage.autoAccept != "false"){
       let trigger = setInterval(function(){
-        console.log("Waiting")
         let queueElement = document.querySelector(".queue-header-time");
         let acceptButton = document.querySelector(".match-ready-btn");
         if (queueElement) {
