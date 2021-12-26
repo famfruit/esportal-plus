@@ -48,18 +48,18 @@ async function getMatches(element, userId, favMapElement) {
                 const matchId = game.id;
                 const matchData = await getMatch(matchId);
                 if (matchData != null && matchData.players != null) {
-                    matchData.players.forEach(player => {
+                    for (let i = 0; i < matchData.players.length; i++) {
+                        const player = matchData.players[i];
                         if (userId === player.id && numberOfGames < 5) {
                             kills += player.kills;
                             deaths += player.deaths;
                             numberOfGames += 1;
                             if (!topMatchList["id"]) {
-                                testFunction(currentTime, player.id).then((value) => {
-                                    value[0].forEach(map => {
-                                        avgMapsPlayed.push(map["total"]);
-                                    });
-                                    topMatchList["map"] = value[0];
+                                let value = await testFunction(currentTime, player.id);
+                                value[0].forEach(map => {
+                                    avgMapsPlayed.push(map["total"]);
                                 });
+                                topMatchList["map"] = value[0];
                                 topMatchList["id"] = player.id;
                             }
                             if (player.elo_change > 0) {
@@ -68,7 +68,7 @@ async function getMatches(element, userId, favMapElement) {
                                 matchList.push("<span style='color: red;'>L</span>");
                             }
                         }
-                    });
+                    }
                 }
             }
 
@@ -79,7 +79,7 @@ async function getMatches(element, userId, favMapElement) {
             if (element !== undefined) {
                 mapIndex = 0;
                 usersTopMaps = {};
-                topMatchList["avg"] = eval(avgMapsPlayed.join('+'))/avgMapsPlayed.length;
+                topMatchList["avg"] = eval(avgMapsPlayed.join('+')) / avgMapsPlayed.length;
                 topMatchList["map"].forEach(map => {
                     mapGamesPlayed = map.wins + map.losses;
                     if (mapGamesPlayed >= topMatchList["avg"]) {
