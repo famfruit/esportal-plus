@@ -7,6 +7,8 @@ const defaultSettings = {
     profileKDButton: "true",
     faceitLevels: "true",
     matchStats: "true",
+    profileStats: "true",
+    historyStats: "true",
     hideMedalsProfile: "true",
     hideMissionsProfile: "true",
     hideActivityProfile: "true",

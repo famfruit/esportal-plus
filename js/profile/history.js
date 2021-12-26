@@ -16,6 +16,7 @@ async function getHistory(firstTime) {
     }
 
     for (let i = 0; i < matchLinks.length; i++) {
+        
         const href = matchLinks[i].getAttribute("href");
         const matchId = href.substring(href.lastIndexOf("/") + 1);
         getMatch(matchId).then(match => {
@@ -42,9 +43,9 @@ async function getHistory(firstTime) {
                 const kd = `${(Math.round((kills / deaths) * 100) / 100).toFixed(2)}`;
                 let value = "";
                 if (kills >= deaths) {
-                    value = `<td><span style="color: green;">${kills} - ${deaths}</span> (${kd})</td>`;
+                    value = `<span style="color: green;">${kills} - ${deaths}</span> (${kd})`;
                 } else {
-                    value = `<td><span style="color: red;">${kills} - ${deaths}</span> (${kd})</td>`;
+                    value = `<span style="color: red;">${kills} - ${deaths}</span> (${kd})`;
                 }
 
                 let td = document.createElement("td");
@@ -54,13 +55,14 @@ async function getHistory(firstTime) {
                     displayProperty = "inline-block";
                 }
                 matchLinks[i].parentElement.parentElement.children[4].innerHTML += ` <span class="esportal-plus-win-loss" style="color: white; display: ${displayProperty};">(${wins} - ${loses})</span>`;
-                matchLinks[i].parentElement.parentElement.appendChild(td);
-                matchLinks[i].parentElement.parentElement.children[6].innerHTML = value;
+                //matchLinks[i].parentElement.parentElement.children[6].innerHTML = value;
+                td.innerHTML = value;
                 if (userStorage.historyStats === "true") {
                     td.style.display = "table-cell";
                 } else {
                     td.style.display = "none";
                 }
+                matchLinks[i].parentElement.parentElement.appendChild(td);
             }
         });
     }

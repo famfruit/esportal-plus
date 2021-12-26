@@ -56,7 +56,9 @@ function processProfile() {
     });
     // Run when match-table has loaded
     prolongedPageLoad(".user-stats-latest-matches", "tbody-populated-tr", function(status) {
-        getHistory(true);
+        setTimeout(() => {
+            getHistory(true);
+        }, 200);
     });
 }
 
@@ -68,7 +70,9 @@ function matchHistoryPageListener() {
         if (!prevButton.className.includes("disabled")) {
             pageLoaded(function(status) {
                 if (status) {
-                    getHistory(false);
+                    setTimeout(() => {
+                        getHistory(false);
+                    }, 200);
                 }
             });
         }
@@ -77,8 +81,10 @@ function matchHistoryPageListener() {
     nextButton.addEventListener("click", function() {
         if (!nextButton.className.includes("disabled")) {
             pageLoaded(function(status) {
-                if (status){
-                    getHistory(false);
+                if (status) {
+                    setTimeout(() => {
+                        getHistory(false);
+                    }, 200);
                 }
             });
         }

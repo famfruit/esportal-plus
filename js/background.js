@@ -64,7 +64,7 @@ chrome.tabs.onUpdated.addListener(
     }
 );
 
-chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) { 
+/*chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) { 
     chrome.tabs.getSelected(null, function(tab) {
         if (changeInfo.url) {
             if (changeInfo.url.includes("profile")) {
@@ -72,14 +72,19 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
             }
         }
     });
-});
+});*/
 
-/*
-async function testar(userlist) {
-    const d = await Promise.all(getFaceitLevels(userlist));
-    return d;
-}
-*/
+chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+    if (changeInfo.status == 'complete') {
+        chrome.tabs.getSelected(null, function(tab) {
+            if (tab.url) {
+                if (tab.url.includes("profile")) {
+                    sendFaceitLevel(tabId, tab.url);
+                }
+            }
+        });
+    }
+});
 
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
