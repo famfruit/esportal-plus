@@ -98,6 +98,7 @@ pageLoaded(function(status) {
         pageLoaded(function(status){
             clearAds();
             hideLivestreams();
+            autoAccept();
         });
     }
 });
@@ -117,6 +118,7 @@ chrome.runtime.onMessage.addListener(
                     // Run Globally
                     clearAds();
                     hideLivestreams();
+                    autoAccept();
                 }
             });
         } else if (request.message === 'profilePage') {
