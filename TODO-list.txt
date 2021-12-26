@@ -1,0 +1,19 @@
+TODO:
+
+*) KD button Overhaul
+    - Verify that the calculations are correct
+    - The calls to "getMatches" and "getIndividualMatches" are weird. Dont use the result from the method calls
+
+*) Ensure Autoaccept works more than once, without reload
+
+*) Implement autocommend fully
+
+*) Implement hide of suggested friends
+
+*) Fix toggling of advanced match stats when on match pages
+
+*) Add faceit level symbols instead of our own level "icons"
+
+*) Fix toggling of smaller profile cards when on profile pages
+
+*) Fix toggling of faceit levels on match pages, works on profile

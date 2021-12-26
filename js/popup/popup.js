@@ -4,34 +4,40 @@ function toggleSetting() {
 
     let settings = {};
     let settingButtons = document.getElementsByClassName('setting');
-    for (let i = 0; i < settingButtons.length; i++) {
-        settings[settingButtons[i].id] = settingButtons[i].value;
-    }
+    if (settingButtons) {
+        for (let i = 0; i < settingButtons.length; i++) {
+            settings[settingButtons[i].id] = settingButtons[i].value;
+        }
 
-    chrome.storage.sync.set({'settings' : settings}, function() {
-        console.log('Settings was saved');
-    });
+        chrome.storage.sync.set({'settings' : settings}, () => {
+            console.log('Settings was saved');
+        });
+    }
 }
 
-function bindSettingButtons() {
+const bindSettingButtons = () => {
     let settingButtons = document.getElementsByClassName('setting');
-    for (let i = 0; i < settingButtons.length; i++) {
-        settingButtons[i].addEventListener('click', toggleSetting);
-        settingButtons[i].value = "true";
-        settingButtons[i].className = 'setting true';
+    if (settingButtons) {
+        for (let i = 0; i < settingButtons.length; i++) {
+            settingButtons[i].addEventListener('click', toggleSetting);
+            settingButtons[i].value = "true";
+            settingButtons[i].className = 'setting true';
+        }
     }
 }
 
-function restoreSettings() {
+const restoreSettings = () => {
     bindSettingButtons();
 
-    chrome.storage.sync.get(['settings'], function(result) {
+    chrome.storage.sync.get(['settings'], result => {
         const data = result['settings'];
         if (data) {
             for (let key of Object.keys(data)) {
                 let button = document.getElementById(key);
-                button.value = (data[key] === '') ? "true" : data[key];
-                button.className = data[key] === "true" ? 'setting true' : 'setting false';
+                if (button) {
+                    button.value = (data[key] === "") ? "true" : data[key];
+                    button.className = data[key] === "true" ? "setting true" : "setting false";
+                }
             }
         }
     });

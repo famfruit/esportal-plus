@@ -1,29 +1,30 @@
-async function autoCommend() {
-  /*
-      Attempt to autocommend teammates
-      - If setting is enabled
-      - Check if match has ended
-      - Collect teammates
-      - If commend button != pressed, attempt to .click() it
-  */
-  const windowUrl = window.location.href;
-  const date = Date.now();
-  if (userStorage.autoCommend == "true") {
-    let matchGroupId = {};
-    if (windowUrl.includes("match")) {
-      let matchId = windowUrl.substring(windowUrl.lastIndexOf('/') + 1);
-      let url = `https://esportal.com/api/match/get?_=${date}&id=${matchId}`;
-      let resp = await fetch(url);
-      let result = await resp.json();
-      for([index, value] of Object.entries(result.players)) {
-        let groupId = matchGroupId[value["matchmaking_group_id"]];
-        if (!groupId) {
-          groupId = [];
-        } else {
-          groupId.push(value.username);
+const autoCommend = async () => {
+    /*
+    Attempt to autocommend teammates
+    - If setting is enabled
+    - Check if match has ended
+    - Collect teammates
+    - If commend button != pressed, attempt to .click() it
+    */
+    const url = window.location.href;
+    const date = Date.now();
+    if (userStorage.autoCommend == "true") {
+        let matchGroupId = {};
+        if (url.includes("match")) {
+            let matchId = url.substring(url.lastIndexOf('/') + 1);
+            let resp = await fetch(`https://esportal.com/api/match/get?_=${date}&id=${matchId}`);
+            let result = await resp.json();
+            if (result?.players) {
+                for([index, value] of Object.entries(result.players)) {
+                    let groupId = matchGroupId[value["matchmaking_group_id"]];
+                    if (groupId) {
+                        groupId.push(value.username);
+                    } else {
+                        groupId = [];
+                    }
+                }
+                console.log(matchGroupId);
+            }
         }
-      }
-      console.log(matchGroupId);
     }
-  }
 }

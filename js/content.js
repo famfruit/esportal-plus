@@ -1,8 +1,8 @@
 // Constants
 const TIMEOUT = 50; // ms
 
-function pageLoaded(callback) {
-    let trigger = setInterval(function() {
+const pageLoaded = (callback) => {
+    let trigger = setInterval(() => {
         let loadIndex = 0;
         let pageTitle = document.querySelector(".page-title");
         let app = document.getElementById("app");
@@ -26,18 +26,18 @@ function pageLoaded(callback) {
     }, TIMEOUT);
 }
 
-function prolongedPageLoad(elem, type, callback) {
-    pageLoaded(function(status) {
-        if (status == true) {
-            let trigger = setInterval(function() {
+const prolongedPageLoad = (elem, type, callback) => {
+    pageLoaded((status) => {
+        if (status) {
+            let trigger = setInterval(() => {
                 if (type == "tbody-populated-tr") {
                     // tbody-populated-tr
                     // Check if tbody inside element has trs
-                    // If trs has loaded, run function
+                    // If trs has loaded, run method
                     // element = document.querySelector(ele).children[1].querySelectorAll("tr")
                     if (document.querySelector(elem)) {
-                        element = document.querySelector(elem).querySelector("tbody").getElementsByTagName("tr");
-                        if (element.length > 0) {
+                        let element = document.querySelector(elem).querySelector("tbody").getElementsByTagName("tr");
+                        if (element && element.length > 0) {
                             clearInterval(trigger);
                             callback(true);
                         }
@@ -48,27 +48,28 @@ function prolongedPageLoad(elem, type, callback) {
     });
 }
 
-function processProfile() {
-    pageLoaded(function(status) {
+const processProfile = () => {
+    pageLoaded((status) => {
         hideMain();
         getKdButton();
         getStats();
     });
+
     // Run when match-table has loaded
-    prolongedPageLoad(".user-stats-latest-matches", "tbody-populated-tr", function(status) {
+    prolongedPageLoad(".user-stats-latest-matches", "tbody-populated-tr", (status) => {
         setTimeout(() => {
             getHistory(true);
         }, 200);
     });
 }
 
-function matchHistoryPageListener() {
+const matchHistoryPageListener = () => {
     const prevButton = document.querySelector(".previous-next-buttons div:nth-child(1)");
     const nextButton = document.querySelector(".previous-next-buttons div:nth-child(2)");
 
-    prevButton.addEventListener("click", function() {
+    prevButton.addEventListener("click", () => {
         if (!prevButton.className.includes("disabled")) {
-            pageLoaded(function(status) {
+            pageLoaded((status) => {
                 if (status) {
                     setTimeout(() => {
                         getHistory(false);
@@ -78,9 +79,9 @@ function matchHistoryPageListener() {
         }
     });
 
-    nextButton.addEventListener("click", function() {
+    nextButton.addEventListener("click", () => {
         if (!nextButton.className.includes("disabled")) {
-            pageLoaded(function(status) {
+            pageLoaded((status) => {
                 if (status) {
                     setTimeout(() => {
                         getHistory(false);
@@ -91,7 +92,7 @@ function matchHistoryPageListener() {
     });
 }
 
-pageLoaded(function(status) {
+pageLoaded((status) => {
     if (status) {
         let url = window.location.href;
         if (url.includes("gather") || (url.includes("match") && !url.includes("matchmaking"))) {
@@ -100,8 +101,9 @@ pageLoaded(function(status) {
             processProfile();
             matchHistoryPageListener();
         }
+
         // Run Globally
-        pageLoaded(function(status){
+        pageLoaded((status) => {
             clearAds();
             hideLivestreams();
             autoAccept();
@@ -110,10 +112,10 @@ pageLoaded(function(status) {
 });
 
 chrome.runtime.onMessage.addListener(
-    function (request, sender, sendResponse) {
+    (request, sender, sendResponse) => {
         // Listen for messages sent from background.js
         if (request.message === 'matchPage') {
-            pageLoaded(function(status) {
+            pageLoaded((status) => {
                 if (status) {
                     if (request.url.includes("gather") || request.url.includes("match")) {
                         processLobby();
@@ -121,6 +123,7 @@ chrome.runtime.onMessage.addListener(
                         processProfile();
                         matchHistoryPageListener();
                     }
+
                     // Run Globally
                     clearAds();
                     hideLivestreams();
@@ -129,7 +132,6 @@ chrome.runtime.onMessage.addListener(
             });
         } else if (request.message === 'profilePage') {
             if (request?.data?.payload?.players?.results) {
-                // Dont think this logic works for page reload
                 setFaceitLevel(request.data.payload.players.results);
             }
         }
