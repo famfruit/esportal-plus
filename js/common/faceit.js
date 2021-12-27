@@ -1,9 +1,4 @@
 const setFaceitLevel = (data) => {
-    const levelColors =
-    { 1: "#ededed", 2: "#1ce200", 3: "#1ce200", 4: "#fec700", 5: "#fec700",
-      6: "#fec700", 7: "#fec700", 8: "#ff6309", 9: "#ff6309", 10: "#f91e00"
-    };
-
     if (data) {
         if (data.length != 0 && data[0].games.length != 0) {
             if (data[0].games[0].name == "csgo") {
@@ -16,13 +11,16 @@ const setFaceitLevel = (data) => {
                     if (rating) {
                         let section = rating.querySelectorAll(".section");
                         if (section && section.length > 0) {
+                            let levelImage = `https://raw.githubusercontent.com/Simpe93/esportal-plus/master/img/faceit/faceit${level}.svg`;
                             let wrapper = section[0];
                             let span = document.createElement("a");
                             let image = document.createElement("img")
+                            image.src = levelImage;
+                            image.style.cssText = "height:40px;width:40px;margin-left:10px";
                             span.id = "esportal-plus-faceit-level";
                             span.href = `https://faceit.com/en/players/${nickname}`;
                             span.target = "_BLANK";
-                          //  span.style.cssText = `color: ${levelColors[level]}; margin-left:10px; border-radius:50%; padding:3px 8px; border:2px solid ${levelColors[level]}`;
+                            span.appendChild(image);
                             wrapper.appendChild(span);
                             enableFaceitLevel();
                         }

@@ -1,14 +1,18 @@
 const styleLobbyLevels = (level, nickname) => {
-    const levelCols = {1: "#ededed", 2: "#1ce200", 3: "#1ce200", 4: "#fec700", 5: "#fec700", 6: "#fec700", 7: "#fec700", 8: "#ff6309", 9: "#ff6309", 10: "#f91e00"};
-    let padd = (level === 10) ? "2px 4px" : "2px 7px";
+    let levelImage = `https://raw.githubusercontent.com/Simpe93/esportal-plus/master/img/faceit/faceit${level}.svg`;
     let wrap = document.createElement("div");
     wrap.classList.add("Tipsy-inlineblock-wrapper");
 
     let element = document.createElement("a");
+    let image = document.createElement("img");
+
+    image.src = levelImage;
+    image.style.cssText = "height:30px;width:30px;margin-left:10px;position:relative;top:11px;";
+
     element.href = `https://faceit.com/en/players/${nickname}`;
     element.target = "_BLANK";
-    element.style.cssText = `color: ${levelCols[level]};margin-left:10px;border-radius:50%;padding:${padd};border:1px solid ${levelCols[level]}`;
-    element.innerText = level;
+
+    element.appendChild(image)
     wrap.appendChild(element);
     return wrap;
 }
