@@ -18,11 +18,11 @@ const setFaceitLevel = (data) => {
                         if (section && section.length > 0) {
                             let wrapper = section[0];
                             let span = document.createElement("a");
+                            let image = document.createElement("img")
                             span.id = "esportal-plus-faceit-level";
-                            span.innerHTML = level;
                             span.href = `https://faceit.com/en/players/${nickname}`;
                             span.target = "_BLANK";
-                            span.style.cssText = `color: ${levelColors[level]}; margin-left:10px; border-radius:50%; padding:3px 8px; border:2px solid ${levelColors[level]}`;
+                          //  span.style.cssText = `color: ${levelColors[level]}; margin-left:10px; border-radius:50%; padding:3px 8px; border:2px solid ${levelColors[level]}`;
                             wrapper.appendChild(span);
                             enableFaceitLevel();
                         }
