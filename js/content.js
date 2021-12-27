@@ -97,6 +97,7 @@ pageLoaded((status) => {
         let url = window.location.href;
         if (url.includes("gather") || (url.includes("match") && !url.includes("matchmaking"))) {
             processLobby();
+            autoCommend(true);
         } else if (url.includes("profile")) {
             processProfile();
             matchHistoryPageListener();
@@ -119,6 +120,7 @@ chrome.runtime.onMessage.addListener(
                 if (status) {
                     if (request.url.includes("gather") || request.url.includes("match")) {
                         processLobby();
+                        autoCommend(true);
                     } else if (request.url.includes("profile")) {
                         processProfile();
                         matchHistoryPageListener();

@@ -20,6 +20,7 @@
       "https://esportal.com/*"
     ],
     "js": [
+      "/js/common/assets.js",
       "/js/content.js",
       "/js/common/api.js",
       "/js/common/faceit.js",
