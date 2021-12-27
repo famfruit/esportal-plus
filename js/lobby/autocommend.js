@@ -1,7 +1,12 @@
 function isMatchActive(data, trigger){
-  if (data.active != true){
+  if (data.active === false){
     clearInterval(trigger)
+    autoCommend(true);
+    console.log("Match is done, cancel interval")
+  } else {
     autoCommend(false);
+    console.log("Continue")
+  }
 }
 function fetchMatchIfActive(trigger){
     const url = window.location.href;
