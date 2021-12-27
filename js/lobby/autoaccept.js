@@ -1,13 +1,12 @@
 const autoAccept = () => {
     // Interval, look for DIV - if exist, start a new interval to look for it being open
-    if (userStorage.autoAccept == "truee") {
+    if (userStorage.autoAccept != "false") {
         let trigger = setInterval(() => {
             let queueElement = document.querySelector(".queue-header-time");
             let acceptButton = document.querySelector(".match-ready-btn");
             if (queueElement && acceptButton) {
-                // Press button and remove timeout
+                // Press button and continue interval?
                 acceptButton.click();
-                clearInterval(trigger);
             }
         }, 2000); // 2 seconds
     }
