@@ -10,7 +10,7 @@
 * History of 5 latest games, W/L and average K/D
 * Participants favorite and best map
 * Faceit level
-* Automatically commends premade peammates
+* Automatically commends premade teammates
 * Automatically accept matches
 
 <img src="https://i.imgur.com/rrTBnux.png" width="90%"></br></br></br>
@@ -24,7 +24,7 @@
 <img src="https://i.imgur.com/MmIGtWa.png" width="44%" align="left">
 <img src="https://i.imgur.com/mZTvzpx.png" width="44%" align="left">
 
-</br></br></br></br></br></br></br></br></br></br></br></br></br></br>
+</br></br></br></br></br></br></br></br></br></br></br></br></br></br></br>
 > Toggle Elements On/Off
 * Hide suggested friends
 * Hide livestreams
