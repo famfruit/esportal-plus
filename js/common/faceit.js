@@ -25,7 +25,7 @@ const setFaceitLevel = (data) => {
                             enableFaceitLevel();
                         }
                     }
-                }, 1000);
+                }, 500);
             }
         }
     }
