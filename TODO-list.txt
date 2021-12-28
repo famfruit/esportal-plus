@@ -5,15 +5,14 @@ TODO:
     - The calls to "getMatches" and "getIndividualMatches" are weird. Dont use the result from the method calls
 
 *) Ensure Autoaccept works more than once, without reload
+   - This works now?
 
 *) Implement autocommend fully
+   - Handle page swaps, stop timer
+   - Dont start timer if the user itself is not in the game
 
-*) Implement hide of suggested friends
+Improvements:
 
-*) Fix toggling of advanced match stats when on match pages
+*) Add onInstalled section to clear storage on new install
 
-*) Add faceit level symbols instead of our own level "icons"
-
-*) Fix toggling of smaller profile cards when on profile pages
-
-*) Fix toggling of faceit levels on match pages, works on profile
+*) Use getUrl to handle svg image files
