@@ -1,15 +1,15 @@
 TODO:
 
 *) KD button Overhaul
-    :heavy_check_mark: Verify that the calculations are correct
-    :heavy_check_mark: The calls to "getMatches" and "getIndividualMatches" are weird. Dont use the result from the method calls
+    ✓ Verify that the calculations are correct
+    ✓ The calls to "getMatches" and "getIndividualMatches" are weird. Dont use the result from the method calls
 
 *) Ensure Autoaccept works more than once, without reload
-   :heavy_check_mark: This works now?
+    ✓ This works now?
 
 *) Implement autocommend fully
-   :heavy_check_mark: Handle page swaps, stop timer
-   :heavy_check_mark: Dont start timer if the user itself is not in the game
+    ✓ Handle page swaps, stop timer
+    ✓ Dont start timer if the user itself is not in the game
 
 Improvements:
 
