@@ -16,3 +16,5 @@ Improvements:
 *) Add onInstalled section to clear storage on new install
 
 *) Use getUrl to handle svg image files
+
+*) Translate everything from swedan to engrisch
