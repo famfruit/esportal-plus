@@ -12,7 +12,8 @@ const defaultSettings = {
     hideMedalsProfile: "true",
     hideMissionsProfile: "true",
     hideActivityProfile: "true",
-    smallCardsProfile: "true"
+    smallCardsProfile: "true",
+    hideSuggestedFriends: "true"
 }
 
 const getSettingsStorage = async (key) => {
@@ -59,15 +60,26 @@ window.addEventListener('load', () => {
             let setting = getUpdatedSetting(changes.settings?.newValue);
             userStorage = changes.settings?.newValue;
 
+            if (setting === "hideSuggestedFriends") {
+                toggleSuggestedFriends();
+            }
+
             // Update page based on updated setting
             if (isMatchPage(window.location.href)) {
-                if (setting === "matchStats") {
-                    // TODO: Handle live toggle of match stats
-                    processLobby();
+                switch(setting) {
+                    case "matchStats":
+                        toggleLobby();
+                        break;
+                    case "faceitLevels":
+                        enableFaceitLevel();
+                        break;
+                    default:
+                        break;
                 }
             } else if (isProfilePage(window.location.href)) {
                 switch(setting) {
                     case "profileStats":
+                    case "smallCardsProfile":
                         clearStats();
                         getStats();
                         break;

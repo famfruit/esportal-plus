@@ -105,6 +105,7 @@ pageLoaded((status) => {
 
         // Run Globally
         pageLoaded((status) => {
+            toggleSuggestedFriends();
             clearAds();
             hideLivestreams();
             autoAccept();
@@ -127,6 +128,7 @@ chrome.runtime.onMessage.addListener(
                     }
 
                     // Run Globally
+                    toggleSuggestedFriends();
                     clearAds();
                     hideLivestreams();
                     autoAccept();

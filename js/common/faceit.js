@@ -17,7 +17,7 @@ const setFaceitLevel = (data) => {
                             let image = document.createElement("img")
                             image.src = levelImage;
                             image.style.cssText = "height:40px;width:40px;margin-left:10px";
-                            span.id = "esportal-plus-faceit-level";
+                            span.id = "esportal-plus-faceit-level-profile";
                             span.href = `https://faceit.com/en/players/${nickname}`;
                             span.target = "_BLANK";
                             span.appendChild(image);
@@ -31,14 +31,24 @@ const setFaceitLevel = (data) => {
     }
 }
 
-// TODO: Handle faceit level on match page
 const enableFaceitLevel = () => {
-    let faceitLevel = document.getElementById("esportal-plus-faceit-level");
+    let faceitLevel = document.getElementById("esportal-plus-faceit-level-profile");
     if (faceitLevel) {
         if (userStorage.faceitLevels === "true") {
             faceitLevel.style.display = "block";
         } else {
             faceitLevel.style.display = "none";
+        }
+    }
+
+    let faceitLevels = document.getElementsByClassName("esportal-plus-faceit-level");
+    if (faceitLevels) {
+        for (let i = 0; i < faceitLevels.length; i++) {
+            if (userStorage.faceitLevels === "true") {
+                faceitLevels[i].style.display = "block";
+            } else {
+                faceitLevels[i].style.display = "none";
+            }
         }
     }
 }

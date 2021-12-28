@@ -11,6 +11,7 @@ const styleLobbyLevels = (level, nickname) => {
 
     element.href = `https://faceit.com/en/players/${nickname}`;
     element.target = "_BLANK";
+    element.className = "esportal-plus-faceit-level";
 
     element.appendChild(image)
     wrap.appendChild(element);
@@ -98,7 +99,11 @@ const styleLobbyLevels = (level, nickname) => {
 
                     mapElement = `<div style="width:44px;height:27px;border-radius:5px;background-size:cover;margin: 0 auto;" class="match-lobby-info-map map${usersTopMaps[mapIndex - 1]["mapid"]}"></div>`;
                     element.innerHTML = value;
+                    element.className = "esportal-plus-lobby-games-body";
+                    element.style["text-align"] = "left";
                     favMapElement.innerHTML = mapElement;
+                    favMapElement.className = "esportal-plus-lobby-map-body";
+                    favMapElement.style["text-align"] = "center";
                 }
             }
         }
@@ -122,30 +127,12 @@ const styleLobbyLevels = (level, nickname) => {
 
 const processLobby = async () => {
     if (userStorage.matchStats === "true") {
-        const users = [...document.getElementsByClassName("match-lobby-team-username")];
-        let index = 0;
-
-        /* Tablefix Header */
-        let tableFixFlag = false;
-
-        while(!document.querySelectorAll(".match-lobby-team-tables")[1]) {
+        // Wait for lobby tables to load
+        while (!document.querySelectorAll(".match-lobby-team-tables")[1]) {
             await new Promise(r => setTimeout(r, 100));
         }
 
-        let teamTables = document.querySelectorAll(".match-lobby-team-tables");
-        if (teamTables && teamTables.length > 2) {
-            let matchEnemyParent = teamTables[1].children[0].children[0];
-            if (matchEnemyParent) {
-                let matchEnemyTable = matchEnemyParent.querySelectorAll("th")
-                if (matchEnemyTable && matchEnemyTable.length != 5) {  // Potential conflict here in the future with only looking at length
-                    let matchEnemyHead = document.createElement("th");
-                    matchEnemyHead.innerText = "Map";
-                    matchEnemyParent.appendChild(matchEnemyHead);
-                    tableFixFlag = true;
-                }
-            }
-        }
-        /* End Tablefix Header */
+        const users = [...document.getElementsByClassName("match-lobby-team-username")];
 
         // List of usernames
         let userList = [];
@@ -157,41 +144,144 @@ const processLobby = async () => {
                 userList.push("");
             }
         });
-
         sendFaceitLevelsRequest(userList, users);
 
-        users.forEach(user => {
-            const element = user.getElementsByTagName("span");
+        // Setup tables
+        let tables = document.getElementsByClassName("match-lobby-team-tables");
+        let matchCells = [];
+        let mapCells = [];
+        let matchHeaderCells = [];
+        let mapHeaderCells = [];
+        if (tables) {
+            for (let i = 0; i < tables.length; i++) {
+                let tableHead = tables[i].tHead;
+                if (tableHead?.rows && tableHead.rows.length > 0) {
+                    let tableHeadRow = tableHead.rows[0];
+                    if (tableHeadRow?.cells) {
+                        if (tableHeadRow.cells.length === 4) {
+                            tableHeadRow.cells[1].style.display = "none";
+                            tableHeadRow.cells[1].classList.add("esportal-plus-removed");
+                            matchHeaderCells.push(tableHeadRow.insertCell(1));
+                            mapHeaderCells.push(tableHeadRow.insertCell());
+                        } else if (tableHeadRow.cells.length === 5) {
+                            tableHeadRow.cells[1].style.display = "none";
+                            tableHeadRow.cells[4].style.display = "none";
+                            tableHeadRow.cells[1].classList.add("esportal-plus-removed");
+                            tableHeadRow.cells[4].classList.add("esportal-plus-removed");
+                            matchHeaderCells.push(tableHeadRow.insertCell(1));
+                            mapHeaderCells.push(tableHeadRow.insertCell());
+                        }
+                    }
+                }
 
-            /* Tablefix - Columns */
-            if(index > 4 && tableFixFlag) {
-                let matchEnemyRowParent = user.parentElement.parentElement;
-                let matchEnemyRow = document.createElement("td");
-                if (matchEnemyRowParent) {
-                    matchEnemyRowParent.appendChild(matchEnemyRow);
+                let tableBody = tables[i].tBodies[0];
+                if (tableBody?.rows && tableBody.rows.length > 0) {
+                    let tableRows = tableBody.rows;
+                    if (tableRows[0].cells) {
+                        if (tableRows[0].cells.length === 4) {
+                            // Hide index 1
+                            for (const tableRow of tableRows) {
+                                tableRow.cells[1].style.display = "none";
+                                tableRow.cells[1].classList.add("esportal-plus-removed");
+                                matchCells.push(tableRow.insertCell(1));
+                                mapCells.push(tableRow.insertCell());
+                            }
+                        } else if (tableRows[0].cells.length === 5) {
+                            // Hide index 1 and 4
+                            for (const tableRow of tableRows) {
+                                tableRow.cells[1].style.display = "none";
+                                tableRow.cells[4].style.display = "none";
+                                tableRow.cells[1].classList.add("esportal-plus-removed");
+                                tableRow.cells[4].classList.add("esportal-plus-removed");
+                                matchCells.push(tableRow.insertCell(1));
+                                mapCells.push(tableRow.insertCell());
+                            }
+                        }
+                    }
                 }
             }
-            /* End Tablefix - Columns */
+        }
 
-            // TODO: Validate all of these
-            let tableItem = user.parentElement.parentElement.children[1];
-            let headerItem = user.parentElement.parentElement.parentElement.parentElement.getElementsByTagName("thead")[0].children[0].children[1];
-            let tableItemMap = user.parentElement.parentElement.children[4];
-            let headerItemMap = user.parentElement.parentElement.parentElement.parentElement.getElementsByTagName("thead")[0].children[0].children[4];
+        for (let u = 0; u < users.length; u++) {
+            let user = users[u];
+            const element = user.getElementsByTagName("span");
 
             if (element && element.length > 0) {
                 getUser(element[0].innerText).then(user => {
-                    getMatches(tableItem, user.id, tableItemMap);
+                    getMatches(matchCells[u], user.id, mapCells[u]);
                 });
             }
+        }
 
-            if (index % 5 === 0 && headerItem !== undefined) {
-                headerItem.style["text-align"] = "left";
-                headerItem.innerText = "Last 5 games";
-                headerItemMap.innerText = "Map";
-                headerItemMap.style["text-align"] = "center";
+        for (let y = 0; y < matchHeaderCells.length; y++) {
+            let matchHeaderCell = matchHeaderCells[y];
+            matchHeaderCell.className = "esportal-plus-lobby-games-header";
+            matchHeaderCell.style["text-align"] = "left";
+            matchHeaderCell.innerText = "Last 5 games";
+        }
+
+        for (let w = 0; w < mapHeaderCells.length; w++) {
+            let mapHeaderCell = mapHeaderCells[w];
+            mapHeaderCell.className = "esportal-plus-lobby-map-header";
+            mapHeaderCell.style["text-align"] = "center";
+            mapHeaderCell.innerText = "Map";
+        }
+    }
+}
+
+const toggleLobby = () => {
+    let gamesHeaders = document.getElementsByClassName("esportal-plus-lobby-games-header");
+    if (gamesHeaders) {
+        for (let i = 0; i < gamesHeaders.length; i++) {
+            if (userStorage.matchStats === "true") {
+                gamesHeaders[i].style.display = "table-cell";
+            } else {
+                gamesHeaders[i].style.display = "none";
             }
-            index += 1;
-        });
+        }
+    }
+
+    let gamesBodies = document.getElementsByClassName("esportal-plus-lobby-games-body");
+    if (gamesBodies) {
+        for (let i = 0; i < gamesBodies.length; i++) {
+            if (userStorage.matchStats === "true") {
+                gamesBodies[i].style.display = "table-cell";
+            } else {
+                gamesBodies[i].style.display = "none";
+            }
+        }
+    }
+
+    let mapHeaders = document.getElementsByClassName("esportal-plus-lobby-map-header");
+    if (mapHeaders) {
+        for (let i = 0; i < mapHeaders.length; i++) {
+            if (userStorage.matchStats === "true") {
+                mapHeaders[i].style.display = "table-cell";
+            } else {
+                mapHeaders[i].style.display = "none";
+            }
+        }
+    }
+
+    let mapBodies = document.getElementsByClassName("esportal-plus-lobby-map-body");
+    if (mapBodies) {
+        for (let i = 0; i < mapBodies.length; i++) {
+            if (userStorage.matchStats === "true") {
+                mapBodies[i].style.display = "table-cell";
+            } else {
+                mapBodies[i].style.display = "none";
+            }
+        }
+    }
+
+    let removes = document.getElementsByClassName("esportal-plus-removed");
+    if (removes) {
+        for (let i = 0; i < removes.length; i++) {
+            if (userStorage.matchStats === "true") {
+                removes[i].style.display = "none";
+            } else {
+                removes[i].style.display = "table-cell";
+            }
+        }
     }
 }

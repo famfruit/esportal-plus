@@ -9,12 +9,12 @@ const isMatchActive = (data, trigger) => {
     }
 }
 
-const fetchMatchIfActive = (trigger) => {
+const fetchMatchIfActive = async (trigger) => {
     const url = window.location.href;
     let matchId = url.substring(url.lastIndexOf('/') + 1);
-    fetch(`https://api.esportal.com/match/get?_=1&id=${matchId}`)
-        .then(response => response.json())
-        .then(data => isMatchActive(data, trigger));
+    let response = await fetch(`https://api.esportal.com/match/get?_=1&id=${matchId}`);
+    let data = await response.json();
+    isMatchActive(data, trigger);
 }
 
 const autoCommend = async (trigger) => {

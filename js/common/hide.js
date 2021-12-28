@@ -41,6 +41,19 @@ const clearAds = () => {
   }
 }
 
+const toggleSuggestedFriends = () => {
+    let elements = document.getElementsByClassName("sidebar-suggested-friends");
+    if (elements) {
+        for (let i = 0; i < elements.length; i++) {
+            if (userStorage.hideSuggestedFriends === "true") {
+                elements[i].style.display = "none";
+            } else {
+                elements[i].style.display = "block";
+            }
+        }
+    }
+}
+
 const hideMain = () => {
     processHideSettings();
 }
