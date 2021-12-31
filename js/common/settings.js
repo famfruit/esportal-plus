@@ -42,7 +42,7 @@ const getUpdatedSetting = (settings) => {
 }
 
 const isMatchPage = (url) => {
-    return url.includes("match") && !url.includes("matchmaking") || url.includes("gather");
+    return (url.includes("match") && !url.includes("matchmaking")) || url.includes("gather");
 }
 
 const isProfilePage = (url) => {

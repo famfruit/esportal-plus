@@ -118,7 +118,11 @@ const styleLobbyLevels = (level, nickname) => {
             for (let i = 0; i < users.length; i++) {
                 if (response[i].level !== 0) {
                     levelWrap = styleLobbyLevels(response[i].level, response[i].nickname);
-                    users[i].parentElement.appendChild(levelWrap);
+
+                    let faceitLevel = users[i].parentElement.getElementsByClassName("esportal-plus-faceit-level");
+                    if (faceitLevel && faceitLevel.length === 0) {
+                        users[i].parentElement.appendChild(levelWrap);
+                    }
                 }
             }
         }

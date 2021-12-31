@@ -7,7 +7,7 @@ const getKdButton = async () => {
         const getMatches = async (userId) => {
             const date = new Date().getTime();
             let matchIndex = 1;
-            for (let i = 0; i < 7; i++){
+            for (let i = 0; i < 7; i++) {
                 let resp = await fetch(`https://api.esportal.com/user_profile/get_latest_matches?_=${date}&id=${userId}&page=${matchIndex}&v=2`);
                 let result = await resp.json();
                 if (result) {
@@ -36,8 +36,8 @@ const getKdButton = async () => {
                             }
                         }
                     }
-                }).then(function() {
-                  if (scoresIndex >= array.length){
+                }).then(() => {
+                  if (scoresIndex >= array.length) {
                     let avg = scores["k"] / scores["d"];
                     let strAvg = avg.toString().slice(0, 4)
 

@@ -5,11 +5,11 @@ const settingsActions = {
 }
 
 const processHideSettings = () => {
-    for([index, value] of Object.entries(settingsActions)){
+    for ([index, value] of Object.entries(settingsActions)) {
         // Iterate over settingsActions and set settings according to user storage
         let hideSettings = settingsActions[index];
         let hideValue = "block";
-        if (userStorage[index] === "true"){
+        if (userStorage[index] === "true") {
             hideValue = "none";
         }
 

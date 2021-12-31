@@ -119,7 +119,7 @@ chrome.runtime.onMessage.addListener(
         if (request.message === 'matchPage') {
             pageLoaded((status) => {
                 if (status) {
-                    if (request.url.includes("gather") || request.url.includes("match")) {
+                    if (request.url.includes("gather") || (request.url.includes("match") && !request.url.includes("matchmaking"))) {
                         processLobby();
                         autoCommend(true);
                     } else if (request.url.includes("profile")) {
